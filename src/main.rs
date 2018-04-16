@@ -20,6 +20,7 @@ mod absy;
 mod parser;
 mod semantics;
 mod flatten;
+mod optimizer;
 mod r1cs;
 mod field;
 mod verification;
@@ -36,6 +37,7 @@ use absy::Prog;
 use parser::parse_program;
 use semantics::Checker;
 use flatten::Flattener;
+use optimizer::Optimizer;
 use r1cs::r1cs_program;
 use clap::{App, AppSettings, Arg, SubCommand};
 #[cfg(not(feature = "nolibsnark"))]
@@ -75,6 +77,10 @@ fn main() {
                                         .takes_value(true)
                                         .required(false)
                                         .default_value(FLATTENED_CODE_DEFAULT_PATH)
+                                    ).arg(Arg::with_name("optimized")
+                                        .long("optimized")
+                                        .help("perform optimization.")
+                                        .required(false)
                                     )
                                  )
     .subcommand(SubCommand::with_name("setup")
@@ -216,29 +222,38 @@ fn main() {
                 }
             };
 
-            println!("Parsed!");
-
             // check semantics
             match Checker::new().check_program(program_ast.clone()) {
                 Ok(()) => (),
                 Err(why) => panic!("Semantic analysis failed with: {}", why)
             };
 
-            println!("Checked!");
-
             // flatten input program
-            let program_flattened =
+            let program_flattened_unoptimized =
                 Flattener::new(FieldPrime::get_required_bits()).flatten_program(program_ast);
 
-            println!("Flattened!");
+            // determine if we should optimize
+            let should_optimize = sub_matches.occurrences_of("optimized") > 0;
+
+            // Optimize flattened program
+            let program_flattened = 
+                match should_optimize {
+                    true => {
+                        match Optimizer::new().optimize_program(program_flattened_unoptimized) {
+                            Ok(p) => p,
+                            Err(why) => panic!("Optimization failed with: {}", why)
+                        }
+                    },
+                    _ => {
+                        program_flattened_unoptimized
+                    }
+                };
 
             // number of constraints the flattened program will translate to.
             let num_constraints = &program_flattened.functions
             .iter()
             .find(|x| x.id == "main")
             .unwrap().statements.len();
-
-            println!("Constraints counted!");
 
             // serialize flattened program and write to binary file
             let bin_output_path = Path::new(sub_matches.value_of("output").unwrap());
@@ -247,27 +262,22 @@ fn main() {
                 Err(why) => panic!("couldn't create {}: {}", bin_output_path.display(), why),
             };
 
-            //serialize_into(&mut bin_output_file, &program_flattened, Infinite).expect("Unable to write data to file.");
-
-            println!("Serialized!");
+            serialize_into(&mut bin_output_file, &program_flattened, Infinite).expect("Unable to write data to file.");
 
             // write human-readable output file
-            // let hr_output_path = bin_output_path.to_path_buf().with_extension("code");
+            let hr_output_path = bin_output_path.to_path_buf().with_extension("code");
 
-            // let hr_output_file = match File::create(&hr_output_path) {
-            //     Ok(file) => file,
-            //     Err(why) => panic!("couldn't create {}: {}", hr_output_path.display(), why),
-            // };
+            let hr_output_file = match File::create(&hr_output_path) {
+                Ok(file) => file,
+                Err(why) => panic!("couldn't create {}: {}", hr_output_path.display(), why),
+            };
 
-            // let mut hrofb = BufWriter::new(hr_output_file);
-            // write!(&mut hrofb, "{}\n", program_flattened).expect("Unable to write data to file.");
-            // hrofb.flush().expect("Unable to flush buffer.");
-
-            println!("Human serialized!");
+            let mut hrofb = BufWriter::new(hr_output_file);
+            write!(&mut hrofb, "{}\n", program_flattened).expect("Unable to write data to file.");
+            hrofb.flush().expect("Unable to flush buffer.");
 
             // debugging output
-            //println!("Compiled program:\n{}", program_flattened);
-
+            // println!("Compiled program:\n{}", program_flattened);
 
             println!(
                 "Compiled code written to '{}', \nHuman readable code to '{}'. \nNumber of constraints: {}",
