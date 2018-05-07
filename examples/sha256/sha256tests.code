@@ -1,8 +1,18 @@
-def NOT(x):
-	return 1 - x
-
-def AND(x, y):
-	return x * y
+import "./binary/not.code" as NOT
+import "./binary/and.code" as AND
+import "./binary/or.code" as OR
+import "./binary/xor.code" as XOR
+import "./binary/fulladd.code" as FULLADD
+import "./bitwise/32/not.code" as NOT
+import "./utils/32/ar6xar11xar25.code" as AR6XAR11XAR25
+import "./utils/32/ar2xar13xar22.code" as AR2XAR13XAR22
+import "./utils/32/ar7xar18xar3.code" as AR7XAR18XAR3
+import "./utils/32/ar17xar19xar10.code" as AR17XAR19XAR10
+import "./utils/32/add.code" as ADD
+import "./bitwise/32/xor.code" as XOR
+import "./bitwise/32/andxornotand.code" as ANDXORNOTAND
+import "./bitwise/32/andxorandxorand.code" as ANDXORANDXORAND
+import "./bitwise/32/copy.code" as COPY
 
 def ANDtest():
 	1 == AND(1, 1)
@@ -10,9 +20,6 @@ def ANDtest():
  	0 == AND(0, 1)
  	0 == AND(0, 0)
  	return 1
-	
-def OR(x, y):
-	return NOT(AND(NOT(x), NOT(y)))
 
 def ORtest():
  	1 == OR(1, 0)
@@ -21,9 +28,6 @@ def ORtest():
  	1 == OR(1, 1)
  	return 1
 
-def XOR(x, y):
-	return AND(OR(x, y), NOT(AND(x,y)))
-
 def XORtest():
  	1 == XOR(1, 0)
  	0 == XOR(0, 0)
@@ -31,8 +35,6 @@ def XORtest():
  	0 == XOR(1, 1)
  	return 1
 
-def NOT(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return NOT(b31), NOT(b30), NOT(b29), NOT(b28), NOT(b27), NOT(b26), NOT(b25), NOT(b24), NOT(b23), NOT(b22), NOT(b21), NOT(b20), NOT(b19), NOT(b18), NOT(b17), NOT(b16), NOT(b15), NOT(b14), NOT(b13), NOT(b12), NOT(b11), NOT(b10), NOT(b9), NOT(b8), NOT(b7), NOT(b6), NOT(b5), NOT(b4), NOT(b3), NOT(b2), NOT(b1), NOT(b0)
 
 def NOTtest():
  	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = NOT(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
@@ -43,21 +45,6 @@ def NOTtest():
  	b14 == 1
  	b13 == 1
  	return 1
-
-def XOR(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0):
-	return XOR(b31, c31), XOR(b30, c30), XOR(b29, c29), XOR(b28, c28), XOR(b27, c27), XOR(b26, c26), XOR(b25, c25), XOR(b24, c24), XOR(b23, c23), XOR(b22, c22), XOR(b21, c21), XOR(b20, c20), XOR(b19, c19), XOR(b18, c18), XOR(b17, c17), XOR(b16, c16), XOR(b15, c15), XOR(b14, c14), XOR(b13, c13), XOR(b12, c12), XOR(b11, c11), XOR(b10, c10), XOR(b9, c9), XOR(b8, c8), XOR(b7, c7), XOR(b6, c6), XOR(b5, c5), XOR(b4, c4), XOR(b3, c3), XOR(b2, c2), XOR(b1, c1), XOR(b0, c0)
-
-def AND(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0):
-	return AND(b31, c31), AND(b30, c30), AND(b29, c29), AND(b28, c28), AND(b27, c27), AND(b26, c26), AND(b25, c25), AND(b24, c24), AND(b23, c23), AND(b22, c22), AND(b21, c21), AND(b20, c20), AND(b19, c19), AND(b18, c18), AND(b17, c17), AND(b16, c16), AND(b15, c15), AND(b14, c14), AND(b13, c13), AND(b12, c12), AND(b11, c11), AND(b10, c10), AND(b9, c9), AND(b8, c8), AND(b7, c7), AND(b6, c6), AND(b5, c5), AND(b4, c4), AND(b3, c3), AND(b2, c2), AND(b1, c1), AND(b0, c0)
-
-def HALFADD(a, b):
-	return XOR(a, b), AND(a, b)
-
-def FULLADD(a, b, carry):
-	out1, carry1 = HALFADD(a, b)
-	out2, carry2 = HALFADD(out1, carry)
-	carry3 = OR(carry1, carry2)
-	return out2, carry3
 
 def FULLADDtest():
 	a, b = FULLADD(0,0,0)
@@ -85,84 +72,8 @@ def FULLADDtest():
  	a == 1
  	b == 1
  	return 1
-
-def RIGHTROTATE2(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2
-
-def RIGHTROTATE2test():
- 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = RIGHTROTATE2(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
- 	b29 == 1
- 	b30 == 0
- 	b28 == 0
- 	return 1
-
-def RIGHTROTATE3(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3
-
-def RIGHTROTATE3test():
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = RIGHTROTATE3(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
- 	b28 == 1
- 	b29 == 0
- 	b27 == 0
- 	b30 == 0
- 	return 1
-
-def RIGHTROTATE6(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6
-
-def RIGHTROTATE6test():
- 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = RIGHTROTATE6(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
- 	b25 == 1
- 	b26 == 0
- 	b24 == 0
- 	b30 == 0
- 	return 1
-
-def RIGHTROTATE7(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7
-
-def RIGHTROTATE7test():
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = RIGHTROTATE7(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
- 	b24 == 1
- 	b25 == 0
- 	b23 == 0
- 	b30 == 0
- 	return 1
-
-def RIGHTROTATE10(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10
-
-def RIGHTROTATE11(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11
-
-def RIGHTROTATE13(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13
-
-def RIGHTROTATE17(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17
-
-def RIGHTROTATE18(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18
-
-def RIGHTROTATE19(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19
-
-def RIGHTROTATE22(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22
-
-def RIGHTROTATE25(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, b31, b30, b29, b28, b27, b26, b25
-
-def AR6XORAR11XORAR25(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0):
-	u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0 = RIGHTROTATE6(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0 = RIGHTROTATE11(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0 = RIGHTROTATE25(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0 = XOR(u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0, v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0)
-	z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0 = XOR(w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0, x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0)
-	return z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0
-
 def AR6XORAR11XORAR25test():
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR6XORAR11XORAR25(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
+	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR6XAR11XAR25(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
 	b31 == 1
 	b30 == 1
 	b29 == 0
@@ -197,16 +108,8 @@ def AR6XORAR11XORAR25test():
 	b0 == 1
 	return 1
 
-def AR2XORAR13XORAR22(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0):
-	u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0 = RIGHTROTATE2(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0 = RIGHTROTATE13(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0 = RIGHTROTATE22(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0 = XOR(u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0, v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0)
-	z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0 = XOR(w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0, x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0)
-	return z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0
-
 def AR2XORAR13XORAR22test():
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR2XORAR13XORAR22(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
+	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR2XAR13XAR22(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
 	b31 == 0
 	b30 == 0
 	b29 == 0
@@ -241,16 +144,8 @@ def AR2XORAR13XORAR22test():
 	b0 == 1
 	return 1
 
-def AR7XORAR18XORAR3(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0):
-	u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0 = RIGHTROTATE7(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0 = RIGHTROTATE18(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0 = RIGHTROTATE3(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0 = XOR(u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0, v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0)
-	z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0 = XOR(w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0, x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0)
-	return z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0
-
 def AR7XORAR18XORAR3test():
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR7XORAR18XORAR3(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
+	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR7XAR18XAR3(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
 	b31 == 1
 	b30 == 1
 	b29 == 1
@@ -285,16 +180,8 @@ def AR7XORAR18XORAR3test():
 	b0 == 0
 	return 1
 
-def AR17XORAR19XORAR10(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0):
-	u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0 = RIGHTROTATE17(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0 = RIGHTROTATE19(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0 = RIGHTROTATE10(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0 = XOR(u31, u30, u29, u28, u27, u26, u25, u24, u23, u22, u21, u20, u19, u18, u17, u16, u15, u14, u13, u12, u11, u10, u9, u8, u7, u6, u5, u4, u3, u2, u1, u0, v31, v30, v29, v28, v27, v26, v25, v24, v23, v22, v21, v20, v19, v18, v17, v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2, v1, v0)
-	z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0 = XOR(w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0, x31, x30, x29, x28, x27, x26, x25, x24, x23, x22, x21, x20, x19, x18, x17, x16, x15, x14, x13, x12, x11, x10, x9, x8, x7, x6, x5, x4, x3, x2, x1, x0)
-	return z31, z30, z29, z28, z27, z26, z25, z24, z23, z22, z21, z20, z19, z18, z17, z16, z15, z14, z13, z12, z11, z10, z9, z8, z7, z6, z5, z4, z3, z2, z1, z0
-
 def AR17XORAR19XORAR10test():
- 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR17XORAR19XORAR10(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
+ 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR17XAR19XAR10(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
  	b31 == 0
 	b30 == 1
 	b29 == 0
@@ -328,41 +215,6 @@ def AR17XORAR19XORAR10test():
 	b1 == 0
 	b0 == 1
 	return 1
-
-def ADD(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0):
-	d0, carry1 = FULLADD(b0, c0, 0)
-	d1, carry2 = FULLADD(b1, c1, carry1)
-	d2, carry3 = FULLADD(b2, c2, carry2)
-	d3, carry4 = FULLADD(b3, c3, carry3)
-	d4, carry5 = FULLADD(b4, c4, carry4)
-	d5, carry6 = FULLADD(b5, c5, carry5)
-	d6, carry7 = FULLADD(b6, c6, carry6)
-	d7, carry8 = FULLADD(b7, c7, carry7)
-	d8, carry9 = FULLADD(b8, c8, carry8)
-	d9, carry10 = FULLADD(b9, c9, carry9)
-	d10, carry11 = FULLADD(b10, c10, carry10)
-	d11, carry12 = FULLADD(b11, c11, carry11)
-	d12, carry13 = FULLADD(b12, c12, carry12)
-	d13, carry14 = FULLADD(b13, c13, carry13)
-	d14, carry15 = FULLADD(b14, c14, carry14)
-	d15, carry16 = FULLADD(b15, c15, carry15)
-	d16, carry17 = FULLADD(b16, c16, carry16)
-	d17, carry18 = FULLADD(b17, c17, carry17)
-	d18, carry19 = FULLADD(b18, c18, carry18)
-	d19, carry20 = FULLADD(b19, c19, carry19)
-	d20, carry21 = FULLADD(b20, c20, carry20)
-	d21, carry22 = FULLADD(b21, c21, carry21)
-	d22, carry23 = FULLADD(b22, c22, carry22)
-	d23, carry24 = FULLADD(b23, c23, carry23)
-	d24, carry25 = FULLADD(b24, c24, carry24)
-	d25, carry26 = FULLADD(b25, c25, carry25)
-	d26, carry27 = FULLADD(b26, c26, carry26)
-	d27, carry28 = FULLADD(b27, c27, carry27)
-	d28, carry29 = FULLADD(b28, c28, carry28)
-	d29, carry30 = FULLADD(b29, c29, carry29)
-	d30, carry31 = FULLADD(b30, c30, carry30)
-	d31, carry32 = FULLADD(b31, c31, carry31)
-	return d31, d30, d29, d28, d27, d26, d25, d24, d23, d22, d21, d20, d19, d18, d17, d16, d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0
 
 def ADDtest():
 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = ADD(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
@@ -400,198 +252,6 @@ def ADDtest():
 	b0 == 0
 	return 1
 
-def ADD(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0, d31, d30, d29, d28, d27, d26, d25, d24, d23, d22, d21, d20, d19, d18, d17, d16, d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0, e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0):
-	ab31, ab30, ab29, ab28, ab27, ab26, ab25, ab24, ab23, ab22, ab21, ab20, ab19, ab18, ab17, ab16, ab15, ab14, ab13, ab12, ab11, ab10, ab9, ab8, ab7, ab6, ab5, ab4, ab3, ab2, ab1, ab0 = ADD(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0)
-	cd31, cd30, cd29, cd28, cd27, cd26, cd25, cd24, cd23, cd22, cd21, cd20, cd19, cd18, cd17, cd16, cd15, cd14, cd13, cd12, cd11, cd10, cd9, cd8, cd7, cd6, cd5, cd4, cd3, cd2, cd1, cd0 = ADD(c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0, d31, d30, d29, d28, d27, d26, d25, d24, d23, d22, d21, d20, d19, d18, d17, d16, d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0)
-	abcd31, abcd30, abcd29, abcd28, abcd27, abcd26, abcd25, abcd24, abcd23, abcd22, abcd21, abcd20, abcd19, abcd18, abcd17, abcd16, abcd15, abcd14, abcd13, abcd12, abcd11, abcd10, abcd9, abcd8, abcd7, abcd6, abcd5, abcd4, abcd3, abcd2, abcd1, abcd0 = ADD(ab31, ab30, ab29, ab28, ab27, ab26, ab25, ab24, ab23, ab22, ab21, ab20, ab19, ab18, ab17, ab16, ab15, ab14, ab13, ab12, ab11, ab10, ab9, ab8, ab7, ab6, ab5, ab4, ab3, ab2, ab1, ab0, cd31, cd30, cd29, cd28, cd27, cd26, cd25, cd24, cd23, cd22, cd21, cd20, cd19, cd18, cd17, cd16, cd15, cd14, cd13, cd12, cd11, cd10, cd9, cd8, cd7, cd6, cd5, cd4, cd3, cd2, cd1, cd0)
-	abcde31, abcde30, abcde29, abcde28, abcde27, abcde26, abcde25, abcde24, abcde23, abcde22, abcde21, abcde20, abcde19, abcde18, abcde17, abcde16, abcde15, abcde14, abcde13, abcde12, abcde11, abcde10, abcde9, abcde8, abcde7, abcde6, abcde5, abcde4, abcde3, abcde2, abcde1, abcde0 = ADD(abcd31, abcd30, abcd29, abcd28, abcd27, abcd26, abcd25, abcd24, abcd23, abcd22, abcd21, abcd20, abcd19, abcd18, abcd17, abcd16, abcd15, abcd14, abcd13, abcd12, abcd11, abcd10, abcd9, abcd8, abcd7, abcd6, abcd5, abcd4, abcd3, abcd2, abcd1, abcd0, e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
-	return abcde31, abcde30, abcde29, abcde28, abcde27, abcde26, abcde25, abcde24, abcde23, abcde22, abcde21, abcde20, abcde19, abcde18, abcde17, abcde16, abcde15, abcde14, abcde13, abcde12, abcde11, abcde10, abcde9, abcde8, abcde7, abcde6, abcde5, abcde4, abcde3, abcde2, abcde1, abcde0
-
-def ADD5test():
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = ADD(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,0,1,1,0,1,0,1,0,1,1,0,0,0,1,1,1,0,0,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,0,1,1,1,0,0,0,1)
-	b31 == 1
-	b30 == 1
-	b29 == 1
-	b28 == 0
-	b27 == 0
-	b26 == 1
-	b25 == 1
-	b24 == 0
-	b23 == 0
-	b22 == 0
-	b21 == 1
-	b20 == 0
-	b19 == 0
-	b18 == 1
-	b17 == 1
-	b16 == 0
-	b15 == 1
-	b14 == 1
-	b13 == 0
-	b12 == 1
-	b11 == 1
-	b10 == 1
-	b9 == 1
-	b8 == 1
-	b7 == 0
-	b6 == 1
-	b5 == 0
-	b4 == 1
-	b3 == 0
-	b2 == 0
-	b1 == 0
-	b0 == 1
-	return 1
-	
-def H0():
-	return 0,1,1,0,1,0,1,0,0,0,0,0,1,0,0,1,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1,1
-def H1():
-	return 1,0,1,1,1,0,1,1,0,1,1,0,0,1,1,1,1,0,1,0,1,1,1,0,1,0,0,0,0,1,0,1
-def H2():
-	return 0,0,1,1,1,1,0,0,0,1,1,0,1,1,1,0,1,1,1,1,0,0,1,1,0,1,1,1,0,0,1,0
-def H3():
-	return 1,0,1,0,0,1,0,1,0,1,0,0,1,1,1,1,1,1,1,1,0,1,0,1,0,0,1,1,1,0,1,0
-def H4():
-	return 0,1,0,1,0,0,0,1,0,0,0,0,1,1,1,0,0,1,0,1,0,0,1,0,0,1,1,1,1,1,1,1
-def H5():
-	return 1,0,0,1,1,0,1,1,0,0,0,0,0,1,0,1,0,1,1,0,1,0,0,0,1,0,0,0,1,1,0,0
-def H6():
-	return 0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,1,1,0,0,1,1,0,1,0,1,0,1,1
-def H7():
-	return 0,1,0,1,1,0,1,1,1,1,1,0,0,0,0,0,1,1,0,0,1,1,0,1,0,0,0,1,1,0,0,1
-
-def K0():
-	return 0,1,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,1,0,1,1,1,1,1,0,0,1,1,0,0,0
-def K1():
-	return 0,1,1,1,0,0,0,1,0,0,1,1,0,1,1,1,0,1,0,0,0,1,0,0,1,0,0,1,0,0,0,1
-def K2():
-	return 1,0,1,1,0,1,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,0,0,1,1,1,1
-def K3():
-	return 1,1,1,0,1,0,0,1,1,0,1,1,0,1,0,1,1,1,0,1,1,0,1,1,1,0,1,0,0,1,0,1
-def K4():
-	return 0,0,1,1,1,0,0,1,0,1,0,1,0,1,1,0,1,1,0,0,0,0,1,0,0,1,0,1,1,0,1,1
-def K5():
-	return 0,1,0,1,1,0,0,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,1
-def K6():
-	return 1,0,0,1,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0
-def K7():
-	return 1,0,1,0,1,0,1,1,0,0,0,1,1,1,0,0,0,1,0,1,1,1,1,0,1,1,0,1,0,1,0,1
-def K8():
-	return 1,1,0,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,1,0,1,0,1,0,1,0,0,1,1,0,0,0
-def K9():
-	return 0,0,0,1,0,0,1,0,1,0,0,0,0,0,1,1,0,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1
-def K10():
-	return 0,0,1,0,0,1,0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,1,0,1,1,0,1,1,1,1,1,0
-def K11():
-	return 0,1,0,1,0,1,0,1,0,0,0,0,1,1,0,0,0,1,1,1,1,1,0,1,1,1,0,0,0,0,1,1
-def K12():
-	return 0,1,1,1,0,0,1,0,1,0,1,1,1,1,1,0,0,1,0,1,1,1,0,1,0,1,1,1,0,1,0,0
-def K13():
-	return 1,0,0,0,0,0,0,0,1,1,0,1,1,1,1,0,1,0,1,1,0,0,0,1,1,1,1,1,1,1,1,0
-def K14():
-	return 1,0,0,1,1,0,1,1,1,1,0,1,1,1,0,0,0,0,0,0,0,1,1,0,1,0,1,0,0,1,1,1
-def K15():
-	return 1,1,0,0,0,0,0,1,1,0,0,1,1,0,1,1,1,1,1,1,0,0,0,1,0,1,1,1,0,1,0,0
-def K16():
-	return 1,1,1,0,0,1,0,0,1,0,0,1,1,0,1,1,0,1,1,0,1,0,0,1,1,1,0,0,0,0,0,1
-def K17():
-	return 1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,0,1,0,0,0,1,1,1,1,0,0,0,0,1,1,0
-def K18():
-	return 0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,1,1,1,0,1,1,1,0,0,0,1,1,0
-def K19():
-	return 0,0,1,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,0,1,1,1,0,0,1,1,0,0
-def K20():
-	return 0,0,1,0,1,1,0,1,1,1,1,0,1,0,0,1,0,0,1,0,1,1,0,0,0,1,1,0,1,1,1,1
-def K21():
-	return 0,1,0,0,1,0,1,0,0,1,1,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,1,0,1,0
-def K22():
-	return 0,1,0,1,1,1,0,0,1,0,1,1,0,0,0,0,1,0,1,0,1,0,0,1,1,1,0,1,1,1,0,0
-def K23():
-	return 0,1,1,1,0,1,1,0,1,1,1,1,1,0,0,1,1,0,0,0,1,0,0,0,1,1,0,1,1,0,1,0
-def K24():
-	return 1,0,0,1,1,0,0,0,0,0,1,1,1,1,1,0,0,1,0,1,0,0,0,1,0,1,0,1,0,0,1,0
-def K25():
-	return 1,0,1,0,1,0,0,0,0,0,1,1,0,0,0,1,1,1,0,0,0,1,1,0,0,1,1,0,1,1,0,1
-def K26():
-	return 1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,1,1,1,1,0,0,1,0,0,0
-def K27():
-	return 1,0,1,1,1,1,1,1,0,1,0,1,1,0,0,1,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1
-def K28():
-	return 1,1,0,0,0,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,1,1
-def K29():
-	return 1,1,0,1,0,1,0,1,1,0,1,0,0,1,1,1,1,0,0,1,0,0,0,1,0,1,0,0,0,1,1,1
-def K30():
-	return 0,0,0,0,0,1,1,0,1,1,0,0,1,0,1,0,0,1,1,0,0,0,1,1,0,1,0,1,0,0,0,1
-def K31():
-	return 0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,1,0,0,1,1,1
-def K32():
-	return 0,0,1,0,0,1,1,1,1,0,1,1,0,1,1,1,0,0,0,0,1,0,1,0,1,0,0,0,0,1,0,1
-def K33():
-	return 0,0,1,0,1,1,1,0,0,0,0,1,1,0,1,1,0,0,1,0,0,0,0,1,0,0,1,1,1,0,0,0
-def K34():
-	return 0,1,0,0,1,1,0,1,0,0,1,0,1,1,0,0,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,0
-def K35():
-	return 0,1,0,1,0,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,1,0,1,0,0,0,1,0,0,1,1
-def K36():
-	return 0,1,1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,1,1,1,0,0,1,1,0,1,0,1,0,1,0,0
-def K37():
-	return 0,1,1,1,0,1,1,0,0,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,1,1,1,0,1,1
-def K38():
-	return 1,0,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1,1,0,0,1,0,0,1,0,0,1,0,1,1,1,0
-def K39():
-	return 1,0,0,1,0,0,1,0,0,1,1,1,0,0,1,0,0,0,1,0,1,1,0,0,1,0,0,0,0,1,0,1
-def K40():
-	return 1,0,1,0,0,0,1,0,1,0,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,0,0,0,0,1
-def K41():
-	return 1,0,1,0,1,0,0,0,0,0,0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,0,0,1,0,1,1
-def K42():
-	return 1,1,0,0,0,0,1,0,0,1,0,0,1,0,1,1,1,0,0,0,1,0,1,1,0,1,1,1,0,0,0,0
-def K43():
-	return 1,1,0,0,0,1,1,1,0,1,1,0,1,1,0,0,0,1,0,1,0,0,0,1,1,0,1,0,0,0,1,1
-def K44():
-	return 1,1,0,1,0,0,0,1,1,0,0,1,0,0,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,0,0,1
-def K45():
-	return 1,1,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,0,0,0,0,1,1,0,0,0,1,0,0,1,0,0
-def K46():
-	return 1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,1,0,1,1,0,0,0,0,1,0,1
-def K47():
-	return 0,0,0,1,0,0,0,0,0,1,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0
-def K48():
-	return 0,0,0,1,1,0,0,1,1,0,1,0,0,1,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,1,1,0
-def K49():
-	return 0,0,0,1,1,1,1,0,0,0,1,1,0,1,1,1,0,1,1,0,1,1,0,0,0,0,0,0,1,0,0,0
-def K50():
-	return 0,0,1,0,0,1,1,1,0,1,0,0,1,0,0,0,0,1,1,1,0,1,1,1,0,1,0,0,1,1,0,0
-def K51():
-	return 0,0,1,1,0,1,0,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,0,0,1,0,1,1,0,1,0,1
-def K52():
-	return 0,0,1,1,1,0,0,1,0,0,0,1,1,1,0,0,0,0,0,0,1,1,0,0,1,0,1,1,0,0,1,1
-def K53():
-	return 0,1,0,0,1,1,1,0,1,1,0,1,1,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,1,0,1,0
-def K54():
-	return 0,1,0,1,1,0,1,1,1,0,0,1,1,1,0,0,1,1,0,0,1,0,1,0,0,1,0,0,1,1,1,1
-def K55():
-	return 0,1,1,0,1,0,0,0,0,0,1,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1,1,1,0,0,1,1
-def K56():
-	return 0,1,1,1,0,1,0,0,1,0,0,0,1,1,1,1,1,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0
-def K57():
-	return 0,1,1,1,1,0,0,0,1,0,1,0,0,1,0,1,0,1,1,0,0,0,1,1,0,1,1,0,1,1,1,1
-def K58():
-	return 1,0,0,0,0,1,0,0,1,1,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,1,0,0
-def K59():
-	return 1,0,0,0,1,1,0,0,1,1,0,0,0,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0
-def K60():
-	return 1,0,0,1,0,0,0,0,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0
-def K61():
-	return 1,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,1,1,0,1,1,0,0,1,1,1,0,1,0,1,1
-def K62():
-	return 1,0,1,1,1,1,1,0,1,1,1,1,1,0,0,1,1,0,1,0,0,0,1,1,1,1,1,1,0,1,1,1
-def K63():
-	return 1,1,0,0,0,1,1,0,0,1,1,1,0,0,0,1,0,1,1,1,1,0,0,0,1,1,1,1,0,0,1,0
-
-def COPY(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0):
-	return b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0
-
 def COPYtest():
 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = COPY(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0)
  	b18 == 0
@@ -601,9 +261,6 @@ def COPYtest():
  	b14 == 0
  	b13 == 1
  	return 1
-
-def ANDXORANDXORAND(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0):
-	return XOR(XOR(AND(a31,b31),AND(a31,c31)),AND(b31,c31)), XOR(XOR(AND(a30,b30),AND(a30,c30)),AND(b30,c30)), XOR(XOR(AND(a29,b29),AND(a29,c29)),AND(b29,c29)), XOR(XOR(AND(a28,b28),AND(a28,c28)),AND(b28,c28)), XOR(XOR(AND(a27,b27),AND(a27,c27)),AND(b27,c27)), XOR(XOR(AND(a26,b26),AND(a26,c26)),AND(b26,c26)), XOR(XOR(AND(a25,b25),AND(a25,c25)),AND(b25,c25)), XOR(XOR(AND(a24,b24),AND(a24,c24)),AND(b24,c24)), XOR(XOR(AND(a23,b23),AND(a23,c23)),AND(b23,c23)), XOR(XOR(AND(a22,b22),AND(a22,c22)),AND(b22,c22)), XOR(XOR(AND(a21,b21),AND(a21,c21)),AND(b21,c21)), XOR(XOR(AND(a20,b20),AND(a20,c20)),AND(b20,c20)), XOR(XOR(AND(a19,b19),AND(a19,c19)),AND(b19,c19)), XOR(XOR(AND(a18,b18),AND(a18,c18)),AND(b18,c18)), XOR(XOR(AND(a17,b17),AND(a17,c17)),AND(b17,c17)), XOR(XOR(AND(a16,b16),AND(a16,c16)),AND(b16,c16)), XOR(XOR(AND(a15,b15),AND(a15,c15)),AND(b15,c15)), XOR(XOR(AND(a14,b14),AND(a14,c14)),AND(b14,c14)), XOR(XOR(AND(a13,b13),AND(a13,c13)),AND(b13,c13)), XOR(XOR(AND(a12,b12),AND(a12,c12)),AND(b12,c12)), XOR(XOR(AND(a11,b11),AND(a11,c11)),AND(b11,c11)), XOR(XOR(AND(a10,b10),AND(a10,c10)),AND(b10,c10)), XOR(XOR(AND(a9,b9),AND(a9,c9)),AND(b9,c9)), XOR(XOR(AND(a8,b8),AND(a8,c8)),AND(b8,c8)), XOR(XOR(AND(a7,b7),AND(a7,c7)),AND(b7,c7)), XOR(XOR(AND(a6,b6),AND(a6,c6)),AND(b6,c6)), XOR(XOR(AND(a5,b5),AND(a5,c5)),AND(b5,c5)), XOR(XOR(AND(a4,b4),AND(a4,c4)),AND(b4,c4)), XOR(XOR(AND(a3,b3),AND(a3,c3)),AND(b3,c3)), XOR(XOR(AND(a2,b2),AND(a2,c2)),AND(b2,c2)), XOR(XOR(AND(a1,b1),AND(a1,c1)),AND(b1,c1)), XOR(XOR(AND(a0,b0),AND(a0,c0)),AND(b0,c0))
 
 def ANDXORANDXORANDtest():
 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = ANDXORANDXORAND(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,1)
@@ -640,55 +297,6 @@ def ANDXORANDXORANDtest():
 	b1 == 0
 	b0 == 1
 	return 1
-
-def ANDXORNOTAND(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0):
-	return XOR(AND(a31,b31),AND(NOT(a31), c31)), XOR(AND(a30,b30),AND(NOT(a30), c30)), XOR(AND(a29,b29),AND(NOT(a29), c29)), XOR(AND(a28,b28),AND(NOT(a28), c28)), XOR(AND(a27,b27),AND(NOT(a27), c27)), XOR(AND(a26,b26),AND(NOT(a26), c26)), XOR(AND(a25,b25),AND(NOT(a25), c25)), XOR(AND(a24,b24),AND(NOT(a24), c24)), XOR(AND(a23,b23),AND(NOT(a23), c23)), XOR(AND(a22,b22),AND(NOT(a22), c22)), XOR(AND(a21,b21),AND(NOT(a21), c21)), XOR(AND(a20,b20),AND(NOT(a20), c20)), XOR(AND(a19,b19),AND(NOT(a19), c19)), XOR(AND(a18,b18),AND(NOT(a18), c18)), XOR(AND(a17,b17),AND(NOT(a17), c17)), XOR(AND(a16,b16),AND(NOT(a16), c16)), XOR(AND(a15,b15),AND(NOT(a15), c15)), XOR(AND(a14,b14),AND(NOT(a14), c14)), XOR(AND(a13,b13),AND(NOT(a13), c13)), XOR(AND(a12,b12),AND(NOT(a12), c12)), XOR(AND(a11,b11),AND(NOT(a11), c11)), XOR(AND(a10,b10),AND(NOT(a10), c10)), XOR(AND(a9,b9),AND(NOT(a9), c9)), XOR(AND(a8,b8),AND(NOT(a8), c8)), XOR(AND(a7,b7),AND(NOT(a7), c7)), XOR(AND(a6,b6),AND(NOT(a6), c6)), XOR(AND(a5,b5),AND(NOT(a5), c5)), XOR(AND(a4,b4),AND(NOT(a4), c4)), XOR(AND(a3,b3),AND(NOT(a3), c3)), XOR(AND(a2,b2),AND(NOT(a2), c2)), XOR(AND(a1,b1),AND(NOT(a1), c1)), XOR(AND(a0,b0),AND(NOT(a0), c0))
-
-def CPASS(k31, k30, k29, k28, k27, k26, k25, k24, k23, k22, k21, k20, k19, k18, k17, k16, k15, k14, k13, k12, k11, k10, k9, k8, k7, k6, k5, k4, k3, k2, k1, k0, w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0):
-	
-	// S1 := (e rightrotate 6) xor (e rightrotate 11) xor (e rightrotate 25)
-	SOne31, SOne30, SOne29, SOne28, SOne27, SOne26, SOne25, SOne24, SOne23, SOne22, SOne21, SOne20, SOne19, SOne18, SOne17, SOne16, SOne15, SOne14, SOne13, SOne12, SOne11, SOne10, SOne9, SOne8, SOne7, SOne6, SOne5, SOne4, SOne3, SOne2, SOne1, SOne0 = AR6XORAR11XORAR25(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
-	
-	// ch := (e and f) xor ((not e) and g)
-	ch31, ch30, ch29, ch28, ch27, ch26, ch25, ch24, ch23, ch22, ch21, ch20, ch19, ch18, ch17, ch16, ch15, ch14, ch13, ch12, ch11, ch10, ch9, ch8, ch7, ch6, ch5, ch4, ch3, ch2, ch1, ch0 = ANDXORNOTAND(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0, f31, f30, f29, f28, f27, f26, f25, f24, f23, f22, f21, f20, f19, f18, f17, f16, f15, f14, f13, f12, f11, f10, f9, f8, f7, f6, f5, f4, f3, f2, f1, f0, g31, g30, g29, g28, g27, g26, g25, g24, g23, g22, g21, g20, g19, g18, g17, g16, g15, g14, g13, g12, g11, g10, g9, g8, g7, g6, g5, g4, g3, g2, g1, g0)
-	
-	// temp1 := h + S1 + ch + k[i] + w[i]
-	tempOne31, tempOne30, tempOne29, tempOne28, tempOne27, tempOne26, tempOne25, tempOne24, tempOne23, tempOne22, tempOne21, tempOne20, tempOne19, tempOne18, tempOne17, tempOne16, tempOne15, tempOne14, tempOne13, tempOne12, tempOne11, tempOne10, tempOne9, tempOne8, tempOne7, tempOne6, tempOne5, tempOne4, tempOne3, tempOne2, tempOne1, tempOne0 = ADD(k31, k30, k29, k28, k27, k26, k25, k24, k23, k22, k21, k20, k19, k18, k17, k16, k15, k14, k13, k12, k11, k10, k9, k8, k7, k6, k5, k4, k3, k2, k1, k0, w31, w30, w29, w28, w27, w26, w25, w24, w23, w22, w21, w20, w19, w18, w17, w16, w15, w14, w13, w12, w11, w10, w9, w8, w7, w6, w5, w4, w3, w2, w1, w0, ch31, ch30, ch29, ch28, ch27, ch26, ch25, ch24, ch23, ch22, ch21, ch20, ch19, ch18, ch17, ch16, ch15, ch14, ch13, ch12, ch11, ch10, ch9, ch8, ch7, ch6, ch5, ch4, ch3, ch2, ch1, ch0, SOne31, SOne30, SOne29, SOne28, SOne27, SOne26, SOne25, SOne24, SOne23, SOne22, SOne21, SOne20, SOne19, SOne18, SOne17, SOne16, SOne15, SOne14, SOne13, SOne12, SOne11, SOne10, SOne9, SOne8, SOne7, SOne6, SOne5, SOne4, SOne3, SOne2, SOne1, SOne0, h31, h30, h29, h28, h27, h26, h25, h24, h23, h22, h21, h20, h19, h18, h17, h16, h15, h14, h13, h12, h11, h10, h9, h8, h7, h6, h5, h4, h3, h2, h1, h0)
-	
-	// S0 := (a rightrotate 2) xor (a rightrotate 13) xor (a rightrotate 22)
-	SZero31, SZero30, SZero29, SZero28, SZero27, SZero26, SZero25, SZero24, SZero23, SZero22, SZero21, SZero20, SZero19, SZero18, SZero17, SZero16, SZero15, SZero14, SZero13, SZero12, SZero11, SZero10, SZero9, SZero8, SZero7, SZero6, SZero5, SZero4, SZero3, SZero2, SZero1, SZero0 = AR2XORAR13XORAR22(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	
-	// maj := (a and b) xor (a and c) xor (b and c)
-	maj31, maj30, maj29, maj28, maj27, maj26, maj25, maj24, maj23, maj22, maj21, maj20, maj19, maj18, maj17, maj16, maj15, maj14, maj13, maj12, maj11, maj10, maj9, maj8, maj7, maj6, maj5, maj4, maj3, maj2, maj1, maj0 = ANDXORANDXORAND(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0)
-	
-	// temp2 := S0 + maj
-	tempTwo31, tempTwo30, tempTwo29, tempTwo28, tempTwo27, tempTwo26, tempTwo25, tempTwo24, tempTwo23, tempTwo22, tempTwo21, tempTwo20, tempTwo19, tempTwo18, tempTwo17, tempTwo16, tempTwo15, tempTwo14, tempTwo13, tempTwo12, tempTwo11, tempTwo10, tempTwo9, tempTwo8, tempTwo7, tempTwo6, tempTwo5, tempTwo4, tempTwo3, tempTwo2, tempTwo1, tempTwo0 = ADD(SZero31, SZero30, SZero29, SZero28, SZero27, SZero26, SZero25, SZero24, SZero23, SZero22, SZero21, SZero20, SZero19, SZero18, SZero17, SZero16, SZero15, SZero14, SZero13, SZero12, SZero11, SZero10, SZero9, SZero8, SZero7, SZero6, SZero5, SZero4, SZero3, SZero2, SZero1, SZero0, maj31, maj30, maj29, maj28, maj27, maj26, maj25, maj24, maj23, maj22, maj21, maj20, maj19, maj18, maj17, maj16, maj15, maj14, maj13, maj12, maj11, maj10, maj9, maj8, maj7, maj6, maj5, maj4, maj3, maj2, maj1, maj0)
-	
-	// h := g
-	h31, h30, h29, h28, h27, h26, h25, h24, h23, h22, h21, h20, h19, h18, h17, h16, h15, h14, h13, h12, h11, h10, h9, h8, h7, h6, h5, h4, h3, h2, h1, h0 = COPY(g31, g30, g29, g28, g27, g26, g25, g24, g23, g22, g21, g20, g19, g18, g17, g16, g15, g14, g13, g12, g11, g10, g9, g8, g7, g6, g5, g4, g3, g2, g1, g0)
-	
-	// g := f
-	g31, g30, g29, g28, g27, g26, g25, g24, g23, g22, g21, g20, g19, g18, g17, g16, g15, g14, g13, g12, g11, g10, g9, g8, g7, g6, g5, g4, g3, g2, g1, g0 = COPY(f31, f30, f29, f28, f27, f26, f25, f24, f23, f22, f21, f20, f19, f18, f17, f16, f15, f14, f13, f12, f11, f10, f9, f8, f7, f6, f5, f4, f3, f2, f1, f0)
-	
-	// f := e
-	f31, f30, f29, f28, f27, f26, f25, f24, f23, f22, f21, f20, f19, f18, f17, f16, f15, f14, f13, f12, f11, f10, f9, f8, f7, f6, f5, f4, f3, f2, f1, f0 = COPY(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
-	
-	// e := d + temp1
-	e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0 = ADD(d31, d30, d29, d28, d27, d26, d25, d24, d23, d22, d21, d20, d19, d18, d17, d16, d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0, tempOne31, tempOne30, tempOne29, tempOne28, tempOne27, tempOne26, tempOne25, tempOne24, tempOne23, tempOne22, tempOne21, tempOne20, tempOne19, tempOne18, tempOne17, tempOne16, tempOne15, tempOne14, tempOne13, tempOne12, tempOne11, tempOne10, tempOne9, tempOne8, tempOne7, tempOne6, tempOne5, tempOne4, tempOne3, tempOne2, tempOne1, tempOne0)
-	
-	// d := c
-	d31, d30, d29, d28, d27, d26, d25, d24, d23, d22, d21, d20, d19, d18, d17, d16, d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0 = COPY(c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0)
-	
-	// c := b
-	c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0 = COPY(b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0)
-	
-	// b := a
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = COPY(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0)
-	
-	// a := temp1 + temp2
-	a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0 = ADD(tempOne31, tempOne30, tempOne29, tempOne28, tempOne27, tempOne26, tempOne25, tempOne24, tempOne23, tempOne22, tempOne21, tempOne20, tempOne19, tempOne18, tempOne17, tempOne16, tempOne15, tempOne14, tempOne13, tempOne12, tempOne11, tempOne10, tempOne9, tempOne8, tempOne7, tempOne6, tempOne5, tempOne4, tempOne3, tempOne2, tempOne1, tempOne0, tempTwo31, tempTwo30, tempTwo29, tempTwo28, tempTwo27, tempTwo26, tempTwo25, tempTwo24, tempTwo23, tempTwo22, tempTwo21, tempTwo20, tempTwo19, tempTwo18, tempTwo17, tempTwo16, tempTwo15, tempTwo14, tempTwo13, tempTwo12, tempTwo11, tempTwo10, tempTwo9, tempTwo8, tempTwo7, tempTwo6, tempTwo5, tempTwo4, tempTwo3, tempTwo2, tempTwo1, tempTwo0)
-
-	return a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0, d31, d30, d29, d28, d27, d26, d25, d24, d23, d22, d21, d20, d19, d18, d17, d16, d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0, e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0, f31, f30, f29, f28, f27, f26, f25, f24, f23, f22, f21, f20, f19, f18, f17, f16, f15, f14, f13, f12, f11, f10, f9, f8, f7, f6, f5, f4, f3, f2, f1, f0, g31, g30, g29, g28, g27, g26, g25, g24, g23, g22, g21, g20, g19, g18, g17, g16, g15, g14, g13, g12, g11, g10, g9, g8, g7, g6, g5, g4, g3, g2, g1, g0, h31, h30, h29, h28, h27, h26, h25, h24, h23, h22, h21, h20, h19, h18, h17, h16, h15, h14, h13, h12, h11, h10, h9, h8, h7, h6, h5, h4, h3, h2, h1, h0
 
 def ANDXORNOTANDtest():
 	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = ANDXORNOTAND(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,1)
@@ -727,16 +335,14 @@ def ANDXORNOTANDtest():
 	return 1
 
 def main():
-	a = ANDtest()
-	b = ORtest()
-	c = XORtest()
-	d = NOTtest()
-	e = FULLADDtest()
-	f = RIGHTROTATE2test()
-	g = RIGHTROTATE3test()
-	h = AR6XORAR11XORAR25test()
-	i = AR2XORAR13XORAR22test()
-	j = AR7XORAR18XORAR3test()
+	//a = ANDtest()
+	//b = ORtest()
+	//c = XORtest()
+	//d = NOTtest()
+	//e = FULLADDtest()
+	//h = AR6XORAR11XORAR25test()
+	//i = AR2XORAR13XORAR22test()
+	//j = AR7XORAR18XORAR3test()
 	k = AR17XORAR19XORAR10test()
 	l = ADDtest()
 	m = COPYtest()

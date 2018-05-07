@@ -72,6 +72,7 @@ pub fn compile<T: Field>(path: PathBuf, should_optimize: bool) -> Result<Prog<T>
 }
 
 fn compile_aux<T: Field>(path: PathBuf) -> Result<Prog<T>, CompileError<T>> {
+	println!("compile {:?}", path);
 	let file = File::open(&path)?;
 
     let program_ast_without_imports: Prog<T> = parse_program(file, path.to_owned())?;
@@ -80,7 +81,7 @@ fn compile_aux<T: Field>(path: PathBuf) -> Result<Prog<T>, CompileError<T>> {
 
     for import in program_ast_without_imports.clone().imports {
     	let path = import.resolve()?;
-    	let compiled = compile(path)?;
+    	let compiled = compile_aux(path)?;
     	compiled_imports.push((compiled, import.alias()));
     }
     	
@@ -92,6 +93,8 @@ fn compile_aux<T: Field>(path: PathBuf) -> Result<Prog<T>, CompileError<T>> {
     // flatten input program
     let program_flattened =
         Flattener::new(T::get_required_bits()).flatten_program(program_ast);
+
+    println!("done with {:?}", path);
 
     Ok(program_flattened)
 }
