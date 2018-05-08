@@ -1,7 +1,7 @@
 // EXTEND
 
-import "./ar7xar18xar3.code" as AR7XAR18XAR3
-import "./ar17xar19xar10.code" as AR17XAR19XAR10
+import "./ar7xar18xars3.code" as AR7XAR18XAR3
+import "./ar17xar19xars10.code" as AR17XAR19XAR10
 import "./add.code" as ADD
 
 def ADD(a31, a30, a29, a28, a27, a26, a25, a24, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12, a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0, b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0, c31, c30, c29, c28, c27, c26, c25, c24, c23, c22, c21, c20, c19, c18, c17, c16, c15, c14, c13, c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0, d31, d30, d29, d28, d27, d26, d25, d24, d23, d22, d21, d20, d19, d18, d17, d16, d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0):

@@ -1,12 +1,5 @@
-import "./bitwise/32/xor.code" as XOR
-import "./bitwise/32/andxorandxorand.code" as ANDXORANDXORAND
-import "./bitwise/32/andxornotand.code" as ANDXORNOTAND
 import "./bitwise/32/copy.code" as COPY
 import "./utils/32/add.code" as ADD
-import "./utils/32/ar2xar13xar22.code" as AR2XAR13XAR22
-import "./utils/32/ar6xar11xar25.code" as AR6XAR11XAR25
-import "./utils/32/ar17xar19xar10.code" as AR17XAR19XAR10
-import "./utils/32/ar7xar18xar3.code" as AR7XAR18XAR3
 import "./utils/32/compression_round.code" as COMPROUND
 import "./utils/32/extend.code" as EXTEND
 
