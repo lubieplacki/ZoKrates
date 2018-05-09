@@ -146,39 +146,40 @@ def AR2XORAR13XORAR22test():
 	return 1
 
 def AR7XORAR18XORAR3test():
-	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR7XAR18XAR3(0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,1,0,1,1,0,1)
-	b31 == 1
+	// s0 of last digest message of empty message
+	b31, b30, b29, b28, b27, b26, b25, b24, b23, b22, b21, b20, b19, b18, b17, b16, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 = AR7XAR18XAR3(1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,0,0,1,1,1,0,0,1,1,0,0,1,0,1)
+	b31 == 0
 	b30 == 1
 	b29 == 1
-	b28 == 1
-	b27 == 1
+	b28 == 0
+	b27 == 0
 	b26 == 0
-	b25 == 0
-	b24 == 0
+	b25 == 1
+	b24 == 1
 	b23 == 1
-	b22 == 0
+	b22 == 1
 	b21 == 1
 	b20 == 1
 	b19 == 1
 	b18 == 0
-	b17 == 0
+	b17 == 1
 	b16 == 1
 	b15 == 0
-	b14 == 0
-	b13 == 1
+	b14 == 1
+	b13 == 0
 	b12 == 1
-	b11 == 1
-	b10 == 1
-	b9 == 0
+	b11 == 0
+	b10 == 0
+	b9 == 1
 	b8 == 1
-	b7 == 0
-	b6 == 0
-	b5 == 0
-	b4 == 1
+	b7 == 1
+	b6 == 1
+	b5 == 1
+	b4 == 0
 	b3 == 1
 	b2 == 1
-	b1 == 0
-	b0 == 0
+	b1 == 1
+	b0 == 1
 	return 1
 
 def AR17XORAR19XORAR10test():
@@ -412,18 +413,18 @@ def EXTENDtest():
 
 
 def main():
-	//a = ANDtest()
-	//b = ORtest()
-	//c = XORtest()
-	//d = NOTtest()
-	//e = FULLADDtest()
-	//h = AR6XORAR11XORAR25test()
-	//i = AR2XORAR13XORAR22test()
-	//j = AR7XORAR18XORAR3test()
-	//k = AR17XORAR19XORAR10testnull()
-	//l = ADDtest()
-	//m = COPYtest()
-	//n = ANDXORANDXORANDtest()
-	//o = ANDXORNOTANDtest()	
+	a = ANDtest()
+	b = ORtest()
+	c = XORtest()
+	d = NOTtest()
+	e = FULLADDtest()
+	h = AR6XORAR11XORAR25test()
+	i = AR2XORAR13XORAR22test()
+	j = AR7XORAR18XORAR3test()
+	k = AR17XORAR19XORAR10testnull()
+	l = ADDtest()
+	m = COPYtest()
+	n = ANDXORANDXORANDtest()
+	o = ANDXORNOTANDtest()	
 	p = EXTENDtest()
  	return 1
