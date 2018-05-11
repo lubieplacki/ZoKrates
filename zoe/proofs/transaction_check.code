@@ -4,12 +4,12 @@ import './public_key_check.code' as public_key_check
 import './root_check20.code' as root_check
  
 \\ i256 input_invalidator, i256 root, i32 out_value, i256 change_commitment
-def main(input_invalidator, root, out_commitment, change_commitment,     private input_value, private input_id, private input_private_key, private input_public_key,     private input_commitment, private input_path_0, private input_path_1, private input_path_2, private input_path_3, private input_path_4, private input_path_5, private input_path_6, private input_path_7, private input_path_8, private input_path_9, private input_path_10, private input_path_11, private input_path_12, private input_path_13, private input_path_14, private input_path_15, private input_path_16, private input_path_17, private input_path_18, private input_path_19,     private change_value, private change_id, private change_public_key,     private out_value, private out_id, private out_public_key,    ):
+def main(input_invalidator, root, out_commitment, change_commitment,     private input_value, private input_id, private input_private_key, private input_public_key,     private input_commitment, private input_path_0, private input_path_1, private input_path_2, private input_path_3, private input_path_4, private input_path_5, private input_path_6, private input_path_7, private input_path_8, private input_path_9, private input_path_10, private input_path_11, private input_path_12, private input_path_13, private input_path_14, private input_path_15, private input_path_16, private input_path_17, private input_path_18, private input_path_19,     private change_value, private change_id, private change_public_key,     private out_value, private out_id, private out_public_key    ):
   \\Check input coin is correct
   commitment_check(input_value, input_commitment, input_id, input_public_key) == 1
   public_key_check(input_public_key, input_private_key) == 1
   invalidator_check(input_invalidator, input_private_key, input_id) == 1
-  root_check(root, input_commitment, private input_path_0, private input_path_1, private input_path_2, private input_path_3, private input_path_4, private input_path_5, private input_path_6, private input_path_7, private input_path_8, private input_path_9, private input_path_10, private input_path_11, private input_path_12, private input_path_13, private input_path_14, private input_path_15, private input_path_16, private input_path_17, private input_path_18, private input_path_19) == 1
+  root_check(root, input_commitment, input_path_0, input_path_1, input_path_2, input_path_3, input_path_4, input_path_5, input_path_6, input_path_7, input_path_8, input_path_9, input_path_10, input_path_11, input_path_12, input_path_13, input_path_14, input_path_15, input_path_16, input_path_17, input_path_18, input_path_19) == 1
   
   \\Check if output is correct
   input_value == out_value + change_value

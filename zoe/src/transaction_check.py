@@ -6,14 +6,15 @@ depth = input()
 print "import './root_check{}.code' as root_check".format(depth)
 print " "
 print "\\\\ i256 input_invalidator, i256 root, i32 out_value, i256 change_commitment"
-input_path = (", ").join(["private input_path_{}".format(i) for i in range(0, depth)])
+private_input_path = (", ").join(["private input_path_{}".format(i) for i in range(0, depth)])
+input_path = (", ").join(["input_path_{}".format(i) for i in range(0, depth)])
 print "def main(input_invalidator, root, out_commitment, change_commitment, \
     private input_value, private input_id, private input_private_key, private input_public_key, \
     private input_commitment, {}, \
     private change_value, private change_id, private change_public_key, \
-    private out_value, private out_id, private out_public_key,\
+    private out_value, private out_id, private out_public_key\
     ):" \
-    .format(input_path)
+    .format(private_input_path)
 #TODO everything has to be private
 print "  \\\\Check input coin is correct"
 print "  commitment_check(input_value, input_commitment, input_id, input_public_key) == 1"
