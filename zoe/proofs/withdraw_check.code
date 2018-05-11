@@ -2,18 +2,18 @@ import './commitment_check.code' as commitment_check
 import './invalidator_check.code' as invalidator_check
 import './public_key_check.code' as public_key_check
 import './root_check20.code' as root_check
-
+ 
 \\ i256 input_invalidator, i256 root, i32 out_value, i256 change_commitment
-def main(input_invalidator, root, out_value, change_commitment, private input_value, private input_id, private input_private_key, private input_public_key,     private input_commitment, private input_path_0, private input_path_1, private input_path_2, private input_path_3, private input_path_4, private input_path_5, private input_path_6, private input_path_7, private input_path_8, private input_path_9, private input_path_10, private input_path_11, private input_path_12, private input_path_13, private input_path_14, private input_path_15, private input_path_16, private input_path_17, private input_path_18, private input_path_19, private change_value, private change_id, private change_public_key):
+def main(input_invalidator, root, out_value, change_commitment,     private input_value, private input_id, private input_private_key, private input_public_key,     private input_commitment, private left_input_path_0, private left_input_path_1, private left_input_path_2, private left_input_path_3, private left_input_path_4, private left_input_path_5, private left_input_path_6, private left_input_path_7, private left_input_path_8, private left_input_path_9, private left_input_path_10, private left_input_path_11, private left_input_path_12, private left_input_path_13, private left_input_path_14, private left_input_path_15, private left_input_path_16, private left_input_path_17, private left_input_path_18, private left_input_path_19, private right_input_path_0, private right_input_path_1, private right_input_path_2, private right_input_path_3, private right_input_path_4, private right_input_path_5, private right_input_path_6, private right_input_path_7, private right_input_path_8, private right_input_path_9, private right_input_path_10, private right_input_path_11, private right_input_path_12, private right_input_path_13, private right_input_path_14, private right_input_path_15, private right_input_path_16, private right_input_path_17, private right_input_path_18, private right_input_path_19, private change_value, private change_id, private change_public_key):
   \\Check input coin is correct
   commitment_check(input_value, input_commitment, input_id, input_public_key) == 1
   public_key_check(input_public_key, input_private_key) == 1
   invalidator_check(input_invalidator, input_private_key, input_id) == 1
-  root_check(root, input_commitment, private input_path_0, private input_path_1, private input_path_2, private input_path_3, private input_path_4, private input_path_5, private input_path_6, private input_path_7, private input_path_8, private input_path_9, private input_path_10, private input_path_11, private input_path_12, private input_path_13, private input_path_14, private input_path_15, private input_path_16, private input_path_17, private input_path_18, private input_path_19) == 1
-
+  root_check(root, input_commitment, left_input_path_0, left_input_path_1, left_input_path_2, left_input_path_3, left_input_path_4, left_input_path_5, left_input_path_6, left_input_path_7, left_input_path_8, left_input_path_9, left_input_path_10, left_input_path_11, left_input_path_12, left_input_path_13, left_input_path_14, left_input_path_15, left_input_path_16, left_input_path_17, left_input_path_18, left_input_path_19, right_input_path_0, right_input_path_1, right_input_path_2, right_input_path_3, right_input_path_4, right_input_path_5, right_input_path_6, right_input_path_7, right_input_path_8, right_input_path_9, right_input_path_10, right_input_path_11, right_input_path_12, right_input_path_13, right_input_path_14, right_input_path_15, right_input_path_16, right_input_path_17, right_input_path_18, right_input_path_19) == 1
+  
   \\Check if output is correct
   input_value == out_value + change_value
-
+  
   \\Check if change commitment is correct
   commitment_check(change_value, change_commitment, change_id, change_public_key) == 1
   return 1
