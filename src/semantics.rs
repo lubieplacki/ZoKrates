@@ -107,7 +107,7 @@ impl Checker {
 				self.check_expression_list(list)?;
 				Ok(())
 			}
-			Statement::Definition(id, expr) => {
+			Statement::Definition(id, expr) | Statement::Compiler(id, expr) => {
 				self.check_expression(expr)?;
 				self.scope.insert(Symbol {
 					id: id.to_string(),
@@ -239,7 +239,6 @@ impl Checker {
 mod tests {
 	use super::*;
 	use field::FieldPrime;
-	use parameter::Parameter;
 
 	pub fn new_with_args(scope: HashSet<Symbol>, level: usize, functions: HashSet<FunctionDeclaration>) -> Checker {
 		Checker {
@@ -569,7 +568,7 @@ mod tests {
 					Expression::Identifier("x".to_string())
 				])
 			),
-			Statement::Return(ExpressionList { 
+			Statement::Return(ExpressionList {
 				expressions: vec![
 					Expression::Number(FieldPrime::from(1))
 				]

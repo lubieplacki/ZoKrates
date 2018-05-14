@@ -6,20 +6,20 @@
 //! @date 2017
 
 use std::collections::HashMap;
-use flat_absy::*;
-use flat_absy::FlatExpression::*;
+use absy::*;
+use absy::Expression::*;
 use field::Field;
 
-/// Returns a vector of summands of the given `FlatExpression`.
+/// Returns a vector of summands of the given `Expression`.
 ///
 /// # Arguments
 ///
-/// * `expr` - `FlatExpression` to be split to summands.
+/// * `expr` - `Expression` to be split to summands.
 ///
 /// # Example
 ///
 /// a + 2*b + (c - d) -> [a, 2*b, c-d]
-fn get_summands<T: Field>(expr: &FlatExpression<T>) -> Vec<&FlatExpression<T>> {
+fn get_summands<T: Field>(expr: &Expression<T>) -> Vec<&Expression<T>> {
     let mut trace = Vec::new();
     let mut add = Vec::new();
     trace.push(expr);
@@ -47,12 +47,12 @@ fn get_summands<T: Field>(expr: &FlatExpression<T>) -> Vec<&FlatExpression<T>> {
 ///
 /// # Arguments
 ///
-/// * `expr` - FlatExpression only containing Numbers, Variables, Add and Mult
+/// * `expr` - Expression only containing Numbers, Variables, Add and Mult
 ///
 /// # Example
 ///
 /// `7 * x + 4 * y + x` -> { x => 8, y = 4 }
-fn count_variables_add<T: Field>(expr: &FlatExpression<T>) -> HashMap<String, T> {
+fn count_variables_add<T: Field>(expr: &Expression<T>) -> HashMap<String, T> {
     let summands = get_summands(expr);
     let mut count = HashMap::new();
     for s in summands {
@@ -86,7 +86,7 @@ fn count_variables_add<T: Field>(expr: &FlatExpression<T>) -> HashMap<String, T>
 ///
 /// * `lhs` - Leht hand side of the equation
 /// * `rhs` - Right hand side of the equation
-fn swap_sub<T: Field>(lhs: &FlatExpression<T>, rhs: &FlatExpression<T>) -> (FlatExpression<T>, FlatExpression<T>) {
+fn swap_sub<T: Field>(lhs: &Expression<T>, rhs: &Expression<T>) -> (Expression<T>, Expression<T>) {
     let mut left = get_summands(lhs);
     let mut right = get_summands(rhs);
     let mut run = true;
@@ -143,8 +143,8 @@ fn swap_sub<T: Field>(lhs: &FlatExpression<T>, rhs: &FlatExpression<T>) -> (Flat
 /// * `b_row` - Result row of matrix B
 /// * `c_row` - Result row of matrix C
 fn r1cs_expression<T: Field>(
-    linear_expr: FlatExpression<T>,
-    expr: FlatExpression<T>,
+    linear_expr: Expression<T>,
+    expr: Expression<T>,
     variables: &mut Vec<String>,
     a_row: &mut Vec<(usize, T)>,
     b_row: &mut Vec<(usize, T)>,
@@ -227,6 +227,9 @@ fn r1cs_expression<T: Field>(
                 a_row.push((get_variable_idx(variables, &key), value));
             }
         }
+        Pow(_, _) => panic!("Pow not flattened"),
+        IfElse(_, _, _) => panic!("IfElse not flattened"),
+        FunctionCall(_, _) => panic!("FunctionCall not flattened"),
         Identifier(var) => {
             a_row.push((get_variable_idx(variables, &var), T::one()));
             b_row.push((0, T::one()));
@@ -268,7 +271,7 @@ fn get_variable_idx(variables: &mut Vec<String>, var: &String) -> usize {
 ///
 /// * `prog` - The program the representation is calculated for.
 pub fn r1cs_program<T: Field>(
-    prog: &FlatProg<T>,
+    prog: &Prog<T>,
 ) -> (
     Vec<String>,
     usize,
@@ -285,7 +288,7 @@ pub fn r1cs_program<T: Field>(
     //Only the main function is relevant in this step, since all calls to other functions were resolved during flattening
     let main = prog.functions
         .iter()
-        .find(|x: &&FlatFunction<T>| x.id == "main".to_string())
+        .find(|x: &&Function<T>| x.id == "main".to_string())
         .unwrap();
     variables.extend(main.arguments.iter().filter(|x| !x.private).map(|x| format!("{}", x)));
 
@@ -300,7 +303,7 @@ pub fn r1cs_program<T: Field>(
 
     for def in &main.statements {
         match *def {
-            FlatStatement::Return(ref list) => {
+            Statement::Return(ref list) => {
                 for (i, val) in list.expressions.iter().enumerate() {
                     let mut a_row: Vec<(usize, T)> = Vec::new();
                     let mut b_row: Vec<(usize, T)> = Vec::new();
@@ -318,8 +321,8 @@ pub fn r1cs_program<T: Field>(
                     c.push(c_row);
                 }
             },
-            FlatStatement::Definition(_, _) => continue,
-            FlatStatement::Condition(ref expr1, ref expr2) => {
+            Statement::Definition(_, _) => continue,
+            Statement::Condition(ref expr1, ref expr2) => {
                 let mut a_row: Vec<(usize, T)> = Vec::new();
                 let mut b_row: Vec<(usize, T)> = Vec::new();
                 let mut c_row: Vec<(usize, T)> = Vec::new();
@@ -335,7 +338,9 @@ pub fn r1cs_program<T: Field>(
                 b.push(b_row);
                 c.push(c_row);
             },
-            FlatStatement::Compiler(..) => continue
+            Statement::For(..) => panic!("For-loop not flattened"),
+            Statement::Compiler(..) => continue,
+            Statement::MultipleDefinition(..) => unimplemented!(),
         }
     }
     (variables, private_inputs_offset, a, b, c)
