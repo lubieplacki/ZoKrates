@@ -16,7 +16,7 @@ print "  {} = sha256Compress({}, {}, {})".format(
     bits("inputId", 32),
     (", ").join(["0" for i in range(0, bits_to_fill)]))
 print " "
-print "  \\\\ Check if invalidator is correctly computed"
+print "  // Check if invalidator is correctly computed"
 print "  hash = 0"
 for i in range(255, -1, -1):
     print "  hash = hash * 2 + hashBit{}".format(i)

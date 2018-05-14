@@ -8,7 +8,7 @@ print "// i32 value, i256 commitment, i32 id, i32 publicKey"
 print "def main(value, commitment, private id, private publicKey):"
 def bits(name, number):
     return (", ").join(["{}Bit{}".format(name, i) for i in range(number-1, -1, -1)])
-print "  \\\\ Convert to bits for hash function"
+print "  // Convert to bits for hash function"
 print "  {} = bitConvert32({})".format(bits("value", 32), "value")
 print " "
 print "  {} = bitConvert32({})".format(bits("id", 32), "id")
@@ -24,7 +24,7 @@ print "  {} = sha256Compress({}, {}, {}, {})".format(
     (", ").join(["0" for i in range(0, bits_to_fill)]))
 print " "
 
-print "  \\\\ Check if commitment is correctly computed"
+print "  // Check if commitment is correctly computed"
 print "  hash = 0"
 for i in range(255, -1, -1):
     print "  hash = hash * 2 + hashBit{}".format(i)

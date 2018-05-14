@@ -19,18 +19,18 @@ print "def main(inputInvalidator, root, outCommitment, changeCommitment, \
     ):" \
     .format(left_private_input_path, right_private_input_path)
 #TODO everything has to be private
-print "  \\\\Check input coin is correct"
+print "  // Check input coin is correct"
 print "  commitmentCheck(inputValue, inputCommitment, inputId, inputPublicKey) == 1"
 print "  publicKeyCheck(inputPublicKey, inputPrivateKey) == 1"
 print "  invalidatorCheck(inputInvalidator, inputPrivateKey, inputId) == 1"
 print "  rootCheck(root, inputCommitment, {}, {}) == 1".format(left_input_path, right_input_path)
 print "  "
-print "  \\\\Check if output is correct"
+print "  // Check if output is correct"
 print "  inputValue == outValue + changeValue"
 print "  "
 #TODO change_value has to be private
-print "  \\\\Check if change commitment is correct"
+print "  // Check if change commitment is correct"
 print "  commitmentCheck(changeValue, changeCommitment, changeId, changePublicKey) == 1"
-print "  \\\\Check if out commitment is correct"
+print "  // Check if out commitment is correct"
 print "  commitmentCheck(outValue, outCommitment, outId, outPublicKey) == 1"
 print "  return 1"
