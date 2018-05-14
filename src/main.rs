@@ -20,9 +20,11 @@ mod absy;
 mod flat_absy;
 mod parameter;
 mod parser;
+mod imports;
 mod semantics;
 mod flatten;
 mod compile;
+mod optimizer;
 mod r1cs;
 mod field;
 mod verification;
@@ -34,9 +36,9 @@ use std::path::{Path, PathBuf};
 use std::io::{BufWriter, Write, BufReader, BufRead, stdin};
 use std::collections::HashMap;
 use std::string::String;
-use field::{Field, FieldPrime};
-use flat_absy::FlatProg;
 use compile::compile;
+use field::{Field, FieldPrime};
+use absy::Prog;
 use r1cs::r1cs_program;
 use clap::{App, AppSettings, Arg, SubCommand};
 #[cfg(not(feature = "nolibsnark"))]
@@ -76,6 +78,10 @@ fn main() {
                                         .takes_value(true)
                                         .required(false)
                                         .default_value(FLATTENED_CODE_DEFAULT_PATH)
+                                    ).arg(Arg::with_name("optimized")
+                                        .long("optimized")
+                                        .help("perform optimization.")
+                                        .required(false)
                                     )
                                  )
     .subcommand(SubCommand::with_name("setup")
@@ -204,8 +210,10 @@ fn main() {
             println!("Compiling {}", sub_matches.value_of("input").unwrap());
 
             let path = PathBuf::from(sub_matches.value_of("input").unwrap());
-            
-            let program_flattened: FlatProg<FieldPrime> = match compile(path) {
+
+            let should_optimize = sub_matches.occurrences_of("optimized") > 0;
+
+            let program_flattened: Prog<FieldPrime> = match compile(path, should_optimize) {
                 Ok(p) => p,
                 Err(why) => panic!("Compilation failed: {}", why)
             };
@@ -238,13 +246,12 @@ fn main() {
             hrofb.flush().expect("Unable to flush buffer.");
 
             // debugging output
-            println!("Compiled program:\n{}", program_flattened);
-
+            // println!("Compiled program:\n{}", program_flattened);
 
             println!(
                 "Compiled code written to '{}', \nHuman readable code to '{}'. \nNumber of constraints: {}",
-                bin_output_path.display(),
-                hr_output_path.display(),
+                "",
+                "",
                 num_constraints
             );
         }
@@ -551,8 +558,8 @@ mod tests {
 
             println!("Testing {:?}", path);
 
-            let program_flattened: FlatProg<FieldPrime> =
-                compile(path).unwrap();
+            let program_flattened: Prog<FieldPrime> =
+                compile(path, false).unwrap();
 
             let (..) = r1cs_program(&program_flattened);
         }
@@ -567,8 +574,8 @@ mod tests {
             };
             println!("Testing {:?}", path);
 
-            let program_flattened: FlatProg<FieldPrime> =
-                compile(path).unwrap();
+            let program_flattened: Prog<FieldPrime> =
+                compile(path, false).unwrap();
 
             let (..) = r1cs_program(&program_flattened);
             let _ = program_flattened.get_witness(vec![FieldPrime::zero()]);
