@@ -1,24 +1,24 @@
-print "import \"./bit_convert_32.code\" as bit_convert_32"
-print "import \"./sha256/sha256.code\" as sha256_compress"
+print "import \"./bit_convert_32.code\" as bitConvert32"
+print "import \"./sha256/sha256.code\" as sha256Compress"
 print " "
 def bits(name, number):
-    return (", ").join(["{}_bit{}".format(name, i) for i in range(number-1, -1, -1)])
+    return (", ").join(["{}Bit{}".format(name, i) for i in range(number-1, -1, -1)])
 print " "
-print "def main(input_invalidator, private input_private_key, private input_id):"
-print "  {} = bit_convert_32({})".format(bits("input_private_key", 32), "input_private_key")
+print "def main(inputInvalidator, private inputPrivateKey, private inputId):"
+print "  {} = bitConvert32({})".format(bits("inputPrivateKey", 32), "inputPrivateKey")
 print "  "
-print "  {} = bit_convert_32({})".format(bits("input_id", 32), "input_id")
+print "  {} = bitConvert32({})".format(bits("inputId", 32), "inputId")
 print "  "
 bits_to_fill = 512 - 32 - 32
-print "  {} = sha256_compress({}, {}, {})".format(
+print "  {} = sha256Compress({}, {}, {})".format(
     bits("hash", 256),
-    bits("input_private_key", 32),
-    bits("input_id", 32),
+    bits("inputPrivateKey", 32),
+    bits("inputId", 32),
     (", ").join(["0" for i in range(0, bits_to_fill)]))
 print " "
 print "  \\\\ Check if invalidator is correctly computed"
 print "  hash = 0"
 for i in range(255, -1, -1):
-    print "  hash = hash * 2 + hash_bit{}".format(i)
-print "  hash == input_invalidator"
+    print "  hash = hash * 2 + hashBit{}".format(i)
+print "  hash == inputInvalidator"
 print "  return 1"

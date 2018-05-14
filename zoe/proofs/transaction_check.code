@@ -1,21 +1,21 @@
-import "./commitment_check.code" as commitment_check
-import "./invalidator_check.code" as invalidator_check
-import "./public_key_check.code" as public_key_check
-import "./root_check20.code" as root_check
-
-\\ i256 input_invalidator, i256 root, i32 out_value, i256 change_commitment
-def main(input_invalidator, root, out_commitment, change_commitment,     private input_value, private input_id, private input_private_key, private input_public_key,     private input_commitment, private left_input_path_0, private left_input_path_1, private left_input_path_2, private left_input_path_3, private left_input_path_4, private left_input_path_5, private left_input_path_6, private left_input_path_7, private left_input_path_8, private left_input_path_9, private left_input_path_10, private left_input_path_11, private left_input_path_12, private left_input_path_13, private left_input_path_14, private left_input_path_15, private left_input_path_16, private left_input_path_17, private left_input_path_18, private left_input_path_19, private right_input_path_0, private right_input_path_1, private right_input_path_2, private right_input_path_3, private right_input_path_4, private right_input_path_5, private right_input_path_6, private right_input_path_7, private right_input_path_8, private right_input_path_9, private right_input_path_10, private right_input_path_11, private right_input_path_12, private right_input_path_13, private right_input_path_14, private right_input_path_15, private right_input_path_16, private right_input_path_17, private right_input_path_18, private right_input_path_19,     private change_value, private change_id, private change_public_key,     private out_value, private out_id, private out_public_key    ):
+import "./commitment_check.code" as commitmentCheck
+import "./invalidator_check.code" as invalidatorCheck
+import "./public_key_check.code" as publicKeyCheck
+import "./root_check20.code" as rootCheck
+ 
+// i256 inputInvalidator, i256 root, i32 outValue, i256 changeCommitment
+def main(inputInvalidator, root, outCommitment, changeCommitment,     private inputValue, private inputId, private inputPrivateKey, private inputPublicKey,     private inputCommitment, private leftInputPath0, private leftInputPath1, private leftInputPath2, private leftInputPath3, private leftInputPath4, private leftInputPath5, private leftInputPath6, private leftInputPath7, private leftInputPath8, private leftInputPath9, private leftInputPath10, private leftInputPath11, private leftInputPath12, private leftInputPath13, private leftInputPath14, private leftInputPath15, private leftInputPath16, private leftInputPath17, private leftInputPath18, private leftInputPath19, private rightInputPath0, private rightInputPath1, private rightInputPath2, private rightInputPath3, private rightInputPath4, private rightInputPath5, private rightInputPath6, private rightInputPath7, private rightInputPath8, private rightInputPath9, private rightInputPath10, private rightInputPath11, private rightInputPath12, private rightInputPath13, private rightInputPath14, private rightInputPath15, private rightInputPath16, private rightInputPath17, private rightInputPath18, private rightInputPath19,     private changeValue, private changeId, private changePublicKey,     private outValue, private outId, private outPublicKey    ):
   \\Check input coin is correct
-  commitment_check(input_value, input_commitment, input_id, input_public_key) == 1
-  public_key_check(input_public_key, input_private_key) == 1
-  invalidator_check(input_invalidator, input_private_key, input_id) == 1
-  root_check(root, input_commitment, left_input_path_0, left_input_path_1, left_input_path_2, left_input_path_3, left_input_path_4, left_input_path_5, left_input_path_6, left_input_path_7, left_input_path_8, left_input_path_9, left_input_path_10, left_input_path_11, left_input_path_12, left_input_path_13, left_input_path_14, left_input_path_15, left_input_path_16, left_input_path_17, left_input_path_18, left_input_path_19, right_input_path_0, right_input_path_1, right_input_path_2, right_input_path_3, right_input_path_4, right_input_path_5, right_input_path_6, right_input_path_7, right_input_path_8, right_input_path_9, right_input_path_10, right_input_path_11, right_input_path_12, right_input_path_13, right_input_path_14, right_input_path_15, right_input_path_16, right_input_path_17, right_input_path_18, right_input_path_19) == 1
-
+  commitmentCheck(inputValue, inputCommitment, inputId, inputPublicKey) == 1
+  publicKeyCheck(inputPublicKey, inputPrivateKey) == 1
+  invalidatorCheck(inputInvalidator, inputPrivateKey, inputId) == 1
+  rootCheck(root, inputCommitment, leftInputPath0, leftInputPath1, leftInputPath2, leftInputPath3, leftInputPath4, leftInputPath5, leftInputPath6, leftInputPath7, leftInputPath8, leftInputPath9, leftInputPath10, leftInputPath11, leftInputPath12, leftInputPath13, leftInputPath14, leftInputPath15, leftInputPath16, leftInputPath17, leftInputPath18, leftInputPath19, rightInputPath0, rightInputPath1, rightInputPath2, rightInputPath3, rightInputPath4, rightInputPath5, rightInputPath6, rightInputPath7, rightInputPath8, rightInputPath9, rightInputPath10, rightInputPath11, rightInputPath12, rightInputPath13, rightInputPath14, rightInputPath15, rightInputPath16, rightInputPath17, rightInputPath18, rightInputPath19) == 1
+  
   \\Check if output is correct
-  input_value == out_value + change_value
-
+  inputValue == outValue + changeValue
+  
   \\Check if change commitment is correct
-  commitment_check(change_value, change_commitment, change_id, change_public_key) == 1
+  commitmentCheck(changeValue, changeCommitment, changeId, changePublicKey) == 1
   \\Check if out commitment is correct
-  commitment_check(out_value, out_commitment, out_id, out_public_key) == 1
+  commitmentCheck(outValue, outCommitment, outId, outPublicKey) == 1
   return 1
