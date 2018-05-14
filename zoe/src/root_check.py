@@ -1,6 +1,6 @@
 depth = input()
-print "import './bit_convert_256.code' as bit_convert_256"
-print "import './sha256_compress.code' as sha256_compress"
+print "import \"./bit_convert_256.code\" as bit_convert_256"
+print "import \"./sha256/sha256.code\" as sha256_compress"
 def bits(name, number):
     return (", ").join(["{}_bit{}".format(name, i) for i in range(number-1, -1, -1)])
 

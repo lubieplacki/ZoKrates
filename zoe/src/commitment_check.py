@@ -1,5 +1,5 @@
-print "import './bit_convert_32.code' as bit_convert_32"
-print "import './sha256_compress.code' as sha256_compress"
+print "import \"./bit_convert_32.code\" as bit_convert_32"
+print "import \"./sha256/sha256.code\" as sha256_compress"
 print "\\\\ i32 value, i256 commitment, i32 id, i32 public_key"
 #commitment_words = (", ").join(["commitment_word_{}".format(i) for i in range(7, -1, -1)])
 #public_key_words = (", ").join(["private public_key_word_{}".format(i) for i in range(7, -1, -1)])

@@ -1,5 +1,5 @@
-import './bit_convert_32.code' as bit_convert_32
-import './sha256_compress.code' as sha256_compress
+import "./bit_convert_32.code" as bit_convert_32
+import "./sha256/sha256.code" as sha256_compress
 \\ i32 value, i256 commitment, i32 id, i32 public_key
 def main(value, commitment, private id, private public_key):
   \\ Convert to bits for hash function

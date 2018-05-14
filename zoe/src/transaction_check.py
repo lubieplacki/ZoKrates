@@ -1,9 +1,9 @@
 #TODO figure out privacy
-print "import './commitment_check.code' as commitment_check"
-print "import './invalidator_check.code' as invalidator_check"
-print "import './public_key_check.code' as public_key_check"
+print "import \"./commitment_check.code\" as commitment_check"
+print "import \"./invalidator_check.code\" as invalidator_check"
+print "import \"./public_key_check.code\" as public_key_check"
 depth = input()
-print "import './root_check{}.code' as root_check".format(depth)
+print "import \"./root_check{}.code\" as root_check".format(depth)
 print " "
 print "\\\\ i256 input_invalidator, i256 root, i32 out_value, i256 change_commitment"
 left_private_input_path = (", ").join(["private left_input_path_{}".format(i) for i in range(0, depth)])
