@@ -17,6 +17,18 @@ pub struct Prog<T: Field> {
     pub imports: Vec<Import>
 }
 
+
+impl<T: Field> Prog<T> {
+    // only main flattened function is relevant here, as all other functions are unrolled into it
+    #[allow(dead_code)] // I don't want to remove this
+    pub fn get_witness(&self, inputs: Vec<T>) -> BTreeMap<String, T> {
+        let main = self.functions.iter().find(|x| x.id == "main").unwrap();
+        assert!(main.arguments.len() == inputs.len());
+        main.get_witness(inputs)
+    }
+}
+
+
 impl<T: Field> fmt::Display for Prog<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut res = vec![];
@@ -67,6 +79,38 @@ pub struct Function<T: Field> {
     pub return_count: usize,
 }
 
+impl<T: Field> Function<T> {
+    // for flattened functions
+    pub fn get_witness(&self, inputs: Vec<T>) -> BTreeMap<String, T> {
+        assert!(self.arguments.len() == inputs.len());
+        let mut witness = BTreeMap::new();
+        witness.insert("~one".to_string(), T::one());
+        for (i, arg) in self.arguments.iter().enumerate() {
+            witness.insert(arg.id.to_string(), inputs[i].clone());
+        }
+        for statement in &self.statements {
+            match *statement {
+                Statement::Return(ref list) => {
+                    for (i, val) in list.expressions.iter().enumerate() {
+                        let s = val.solve(&mut witness);
+                        witness.insert(format!("~out_{}", i).to_string(), s);
+                    }
+                }
+                Statement::Compiler(ref id, ref expr) | Statement::Definition(ref id, ref expr) => {
+                    let s = expr.solve(&mut witness);
+                    witness.insert(id.to_string(), s);
+                }
+                Statement::For(..) => unimplemented!(),
+                Statement::Condition(ref lhs, ref rhs) => {
+                    assert_eq!(lhs.solve(&mut witness), rhs.solve(&mut witness))
+                },
+                Statement::MultipleDefinition(..) => panic!("No MultipleDefinition allowed in flattened code"),
+            }
+        }
+        witness
+    }
+}
+
 impl<T: Field> fmt::Display for Function<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
@@ -109,6 +153,7 @@ pub enum Statement<T: Field> {
     Definition(String, Expression<T>),
     Condition(Expression<T>, Expression<T>),
     For(String, T, T, Vec<Statement<T>>),
+    Compiler(String, Expression<T>),
     MultipleDefinition(Vec<String>, Expression<T>),
 }
 
@@ -164,6 +209,7 @@ impl<T: Field> fmt::Display for Statement<T> {
                 }
                 write!(f, "\tendfor")
             }
+            Statement::Compiler(ref lhs, ref rhs) => write!(f, "# {} = {}", lhs, rhs),
             Statement::MultipleDefinition(ref ids, ref rhs) => {
                 for (i, id) in ids.iter().enumerate() {
                     try!(write!(f, "{}", id));
@@ -192,6 +238,7 @@ impl<T: Field> fmt::Debug for Statement<T> {
                 }
                 write!(f, "\tendfor")
             }
+            Statement::Compiler(ref lhs, ref rhs) => write!(f, "Compiler({:?}, {:?})", lhs, rhs),
             Statement::MultipleDefinition(ref lhs, ref rhs) => {
                 write!(f, "MultipleDefinition({:?}, {:?})", lhs, rhs)
             },
@@ -287,7 +334,7 @@ impl<T: Field> Expression<T> {
         }
     }
 
-    pub fn solve(&self, inputs: &mut BTreeMap<String, T>) -> T {
+    fn solve(&self, inputs: &mut BTreeMap<String, T>) -> T {
         match *self {
             Expression::Number(ref x) => x.clone(),
             Expression::Identifier(ref var) => {
@@ -345,6 +392,22 @@ impl<T: Field> Expression<T> {
                     _ => false,
                 }
             }
+            _ => false,
+        }
+    }
+
+    pub fn is_flattened(&self) -> bool {
+        match *self {
+            Expression::Number(_) | Expression::Identifier(_) => true,
+            Expression::Add(ref x, ref y) | Expression::Sub(ref x, ref y) => {
+                x.is_linear() && y.is_linear()
+            }
+            Expression::Mult(ref x, ref y) | Expression::Div(ref x, ref y) => {
+                match (x.clone(), y.clone()) {
+                    (box Expression::Sub(..), _) | (_, box Expression::Sub(..)) => false,
+                    (box x, box y) => x.is_linear() && y.is_linear(),
+                }
+            },
             _ => false,
         }
     }
@@ -424,6 +487,10 @@ impl<T: Field> ExpressionList<T> {
         ExpressionList {
             expressions: expressions
         }
+    }
+
+    pub fn is_flattened(&self) -> bool {
+        self.expressions.iter().all(|e| e.is_flattened())
     }
 }
 

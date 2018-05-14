@@ -17,8 +17,6 @@ extern crate bincode;
 extern crate regex;
 
 mod absy;
-mod flat_absy;
-mod parameter;
 mod parser;
 mod imports;
 mod semantics;
@@ -265,7 +263,7 @@ fn main() {
                 Err(why) => panic!("couldn't open {}: {}", path.display(), why),
             };
 
-            let program_ast: FlatProg<FieldPrime> = match deserialize_from(&mut file, Infinite) {
+            let program_ast: Prog<FieldPrime> = match deserialize_from(&mut file, Infinite) {
                 Ok(x) => x,
                 Err(why) => {
                     println!("{:?}", why);
@@ -273,11 +271,18 @@ fn main() {
                 }
             };
 
+            // make sure the input program is actually flattened.
             let main_flattened = program_ast
                 .functions
                 .iter()
                 .find(|x| x.id == "main")
                 .unwrap();
+            for stat in main_flattened.statements.clone() {
+                assert!(
+                    stat.is_flattened(),
+                    format!("Input conditions not flattened: {}", &stat)
+                );
+            }
 
             // print deserialized flattened program
             println!("{}", main_flattened);
@@ -356,7 +361,7 @@ fn main() {
                 Err(why) => panic!("couldn't open {}: {}", path.display(), why),
             };
 
-            let program_ast: FlatProg<FieldPrime> = match deserialize_from(&mut file, Infinite) {
+            let program_ast: Prog<FieldPrime> = match deserialize_from(&mut file, Infinite) {
                 Ok(x) => x,
                 Err(why) => {
                     println!("{:?}", why);
@@ -364,11 +369,18 @@ fn main() {
                 }
             };
 
+            // make sure the input program is actually flattened.
             let main_flattened = program_ast
                 .functions
                 .iter()
                 .find(|x| x.id == "main")
                 .unwrap();
+            for stat in main_flattened.statements.clone() {
+                assert!(
+                    stat.is_flattened(),
+                    format!("Input conditions not flattened: {}", &stat)
+                );
+            }
 
             // print deserialized flattened program
             println!("{}", main_flattened);

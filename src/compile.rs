@@ -8,7 +8,6 @@ use std::fmt;
 use std::path::{PathBuf};
 use field::{Field, FieldPrime};
 use absy::{Prog};
-use flat_absy::{FlatProg};
 use parser::{self, parse_program};
 use imports::{self, Importer};
 use semantics::{self, Checker};
