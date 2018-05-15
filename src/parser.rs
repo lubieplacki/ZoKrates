@@ -79,6 +79,7 @@ use field::{Field};
 use absy::*;
 use std::path::PathBuf;
 use imports::*;
+use parameter::Parameter;
 
 #[derive(Clone, PartialEq)]
 struct Position {
@@ -1529,7 +1530,7 @@ pub fn parse_program<T: Field>(file: File, path: PathBuf) -> Result<Prog<T>, Err
         }
     }
 
-    Ok(Prog { functions, imports })
+    Ok(Prog { functions, imports, imported_functions: vec![] })
 }
 
 fn parse_comma_separated_expression_list_rec<T: Field>(

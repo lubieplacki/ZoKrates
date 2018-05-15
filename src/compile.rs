@@ -59,7 +59,8 @@ impl fmt::Display for CompileError<FieldPrime> {
 	}
 }
 
-pub fn compile<T: Field>(path: PathBuf, should_optimize: bool) -> Result<Prog<T>, CompileError<T>> {
+
+pub fn compile<T: Field>(path: PathBuf, should_optimize: bool) -> Result<FlatProg<T>, CompileError<T>> {
 	let compiled = compile_aux(path);
 
 	match compiled {
@@ -71,13 +72,13 @@ pub fn compile<T: Field>(path: PathBuf, should_optimize: bool) -> Result<Prog<T>
 	}
 }
 
-fn compile_aux<T: Field>(path: PathBuf) -> Result<Prog<T>, CompileError<T>> {
-	println!("compile {:?}", path);
+
+fn compile_aux<T: Field>(path: PathBuf) -> Result<FlatProg<T>, CompileError<T>> {
 	let file = File::open(&path)?;
 
     let program_ast_without_imports: Prog<T> = parse_program(file, path.to_owned())?;
 
-    let mut compiled_imports: Vec<(Prog<T>, String)> = vec![];
+    let mut compiled_imports: Vec<(FlatProg<T>, String)> = vec![];
 
     for import in program_ast_without_imports.clone().imports {
     	let path = import.resolve()?;

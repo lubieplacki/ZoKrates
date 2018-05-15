@@ -5,16 +5,22 @@
 //! @author Jacob Eberhardt <jacob.eberhardt@tu-berlin.de>
 //! @date 2017
 
+const BINARY_SEPARATOR: &str = "_b";
+
 use std::fmt;
-use std::collections::{HashMap, BTreeMap};
+use std::collections::{BTreeMap};
+use substitution::Substitution;
 use field::Field;
 use imports::Import;
+use parameter::Parameter;
+use flat_absy::*;
 
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
 pub struct Prog<T: Field> {
     /// Functions of the program
     pub functions: Vec<Function<T>>,
-    pub imports: Vec<Import>
+    pub imports: Vec<Import>,
+    pub imported_functions: Vec<FlatFunction<T>>
 }
 
 
@@ -36,6 +42,10 @@ impl<T: Field> fmt::Display for Prog<T> {
                 .iter()
                 .map(|x| format!("{}", x))
                 .collect::<Vec<_>>());
+        res.extend(self.imported_functions
+                .iter()
+                .map(|x| format!("{}", x))
+                .collect::<Vec<_>>());
         res.extend(self.functions
                 .iter()
                 .map(|x| format!("{}", x))
@@ -52,10 +62,15 @@ impl<T: Field> fmt::Debug for Prog<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "program(\n\timports:\n\t\t{}\n\tfunctions:\n\t\t{}\n)",
+            "program(\n\timports:\n\t\t{}\n\tfunctions:\n\t\t{}{}\n)",
             self.imports
                 .iter()
                 .map(|x| format!("{:?}", x))
+                .collect::<Vec<_>>()
+                .join("\n\t\t"),
+            self.imported_functions
+                .iter()
+                .map(|x| format!("{}", x))
                 .collect::<Vec<_>>()
                 .join("\n\t\t"),
             self.functions
@@ -157,45 +172,6 @@ pub enum Statement<T: Field> {
     MultipleDefinition(Vec<String>, Expression<T>),
 }
 
-impl<T: Field> Statement<T> {
-    pub fn is_flattened(&self) -> bool {
-        match *self {
-            Statement::Definition(_, ref x) | Statement::MultipleDefinition(_, ref x) => x.is_flattened(),
-            Statement::Return(ref x) => x.is_flattened(),
-            Statement::Compiler(..) => true,
-            Statement::Condition(ref x, ref y) => {
-                (x.is_linear() && y.is_flattened()) || (x.is_flattened() && y.is_linear())
-            }
-            Statement::For(..) => unimplemented!(), // should not be required, can be implemented later
-        }
-    }
-
-    pub fn apply_substitution(&self, substitution: &HashMap<String, String>) -> Statement<T> {
-        match *self {
-            Statement::Definition(ref id, ref x) => Statement::Definition(
-                match substitution.get(id) {
-                    Some(z) => z.clone(),
-                    None => id.clone()
-                },
-                x.apply_substitution(substitution)
-            ),
-            Statement::MultipleDefinition(ref ids, ref x) => Statement::MultipleDefinition(
-                ids.into_iter().map(|id| substitution.get(id).unwrap().clone()).collect(),
-                x.apply_substitution(substitution)),
-            Statement::Return(ref x) => Statement::Return(x.apply_substitution(substitution)),
-            Statement::Compiler(ref lhs, ref rhs) => Statement::Compiler(match substitution.get(lhs) {
-                    Some(z) => z.clone(),
-                    None => lhs.clone()
-                }, rhs.clone().apply_substitution(&substitution)),
-            Statement::Condition(ref x, ref y) => {
-                Statement::Condition(x.apply_substitution(substitution), y.apply_substitution(substitution))
-            }
-            Statement::For(..) => unimplemented!(), // should not be required, can be implemented later
-        }
-    }
-}
-
-
 impl<T: Field> fmt::Display for Statement<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -247,34 +223,6 @@ impl<T: Field> fmt::Debug for Statement<T> {
 }
 
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
-pub struct Parameter {
-    pub id: String,
-    pub private: bool,
-}
-
-impl Parameter {
-    pub fn apply_substitution(&self, substitution: &HashMap<String, String>) -> Parameter {
-        Parameter {
-            id: substitution.get(&self.id).unwrap().to_string(),
-            private: self.private
-        }
-    }
-}
-
-impl fmt::Display for Parameter {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let visibility = if self.private { "private " } else { "" };
-        write!(f, "{}{}", visibility, self.id)
-    }
-}
-
-impl fmt::Debug for Parameter {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Parameter(id: {:?})", self.id)
-    }
-}
-
-#[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub enum Expression<T: Field> {
     Number(T),
     Identifier(String),
@@ -288,7 +236,7 @@ pub enum Expression<T: Field> {
 }
 
 impl<T: Field> Expression<T> {
-    pub fn apply_substitution(&self, substitution: &HashMap<String, String>) -> Expression<T> {
+    pub fn apply_substitution(&self, substitution: &Substitution) -> Expression<T> {
         match *self {
             ref e @ Expression::Number(_) => e.clone(),
             Expression::Identifier(ref v) => {
@@ -339,16 +287,16 @@ impl<T: Field> Expression<T> {
             Expression::Number(ref x) => x.clone(),
             Expression::Identifier(ref var) => {
                 if let None = inputs.get(var) {
-                    if var.contains("_b") {
-                        let var_name = var.split("_b").collect::<Vec<_>>()[0];
+                    if var.contains(BINARY_SEPARATOR) {
+                        let var_name = var.split(BINARY_SEPARATOR).collect::<Vec<_>>()[0];
                         let mut num = inputs[var_name].clone();
                         let bits = T::get_required_bits();
                         for i in (0..bits).rev() {
                             if T::from(2).pow(i) <= num {
                                 num = num - T::from(2).pow(i);
-                                inputs.insert(format!("{}_b{}", &var_name, i), T::one());
+                                inputs.insert(format!("{}{}{}", &var_name, BINARY_SEPARATOR, i), T::one());
                             } else {
-                                inputs.insert(format!("{}_b{}", &var_name, i), T::zero());
+                                inputs.insert(format!("{}{}{}", &var_name, BINARY_SEPARATOR, i), T::zero());
                             }
                         }
                         assert_eq!(num, T::zero());
@@ -482,7 +430,7 @@ impl<T: Field> ExpressionList<T> {
         }
     }
 
-    pub fn apply_substitution(&self, substitution: &HashMap<String, String>) -> ExpressionList<T> {
+    pub fn apply_substitution(&self, substitution: &Substitution) -> ExpressionList<T> {
         let expressions: Vec<Expression<T>> = self.expressions.iter().map(|e| e.apply_substitution(substitution)).collect();
         ExpressionList {
             expressions: expressions
@@ -522,7 +470,7 @@ pub enum Condition<T: Field> {
 }
 
 impl<T: Field> Condition<T> {
-    fn apply_substitution(&self, substitution: &HashMap<String, String>) -> Condition<T> {
+    fn apply_substitution(&self, substitution: &Substitution) -> Condition<T> {
         match *self {
             Condition::Lt(ref lhs, ref rhs) => Condition::Lt(
                 lhs.apply_substitution(substitution),

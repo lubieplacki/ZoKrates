@@ -52,6 +52,14 @@ impl Checker {
 	}
 
 	pub fn check_program<T: Field>(&mut self, prog: Prog<T>) -> Result<(), Error> {
+		for func in prog.imported_functions {
+			self.functions.insert(FunctionDeclaration {
+				id: func.id,
+				return_count: func.return_count,
+				arg_count: func.arguments.len()
+			});
+		}
+
 		for func in prog.functions {
 			self.check_function(&func)?;
 			self.functions.insert(FunctionDeclaration {
@@ -316,7 +324,8 @@ mod tests {
         funcs.push(bar);
         let prog = Prog {
 			functions: funcs,
-			imports: vec![]
+			imports: vec![],
+			imported_functions: vec![]
         };
 
 		let mut checker = Checker::new();
@@ -384,7 +393,8 @@ mod tests {
         funcs.push(main);
         let prog = Prog {
 			functions: funcs,
-			imports: vec![]
+			imports: vec![],
+			imported_functions: vec![]
         };
 
 		let mut checker = Checker::new();
@@ -584,7 +594,8 @@ mod tests {
 
 		let program = Prog {
 			functions: vec![foo, main],
-			imports: vec![]
+			imports: vec![],
+			imported_functions: vec![]
 		};
 
 		let mut checker = new_with_args(HashSet::new(), 0, HashSet::new());
@@ -770,7 +781,8 @@ mod tests {
 
 		let prog = Prog {
 			functions: vec![main1, main2],
-			imports: vec![]
+			imports: vec![],
+			imported_functions: vec![]
 		};
 
 		let mut checker = Checker::new();
