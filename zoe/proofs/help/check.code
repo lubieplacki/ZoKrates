@@ -1,0 +1,9 @@
+import "./../bit_convert_32.code" as BITCONVERT
+import "./../sha256/sha256.code" as SHA256COMPRESS
+// i32 value, i256 commitment, i32 id, i32 publicKey
+def main(value, commitment, private id, private publicKey):
+  // Convert to bits for hash function
+  valueBit31, valueBit30, valueBit29, valueBit28, valueBit27, valueBit26, valueBit25, valueBit24, valueBit23, valueBit22, valueBit21, valueBit20, valueBit19, valueBit18, valueBit17, valueBit16, valueBit15, valueBit14, valueBit13, valueBit12, valueBit11, valueBit10, valueBit9, valueBit8, valueBit7, valueBit6, valueBit5, valueBit4, valueBit3, valueBit2, valueBit1, valueBit0 = BITCONVERT(value)
+
+
+  return 1

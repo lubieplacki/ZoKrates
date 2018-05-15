@@ -1,0 +1,21 @@
+import "./commitment_check.code" as commitmentCheck
+import "./invalidator_check.code" as invalidatorCheck
+import "./public_key_check.code" as publicKeyCheck
+import "./root_check20.code" as rootCheck
+ 
+// i256 inputInvalidator, i256 root, i32 outValue, i256 changeCommitment
+def main(inputInvalidator, root, outCommitment, changeCommitment,     private inputValue, private inputId, private inputPrivateKey, private inputPublicKey,     private inputCommitment, private leftInputPath0, private leftInputPath1, private leftInputPath2, private leftInputPath3, private leftInputPath4, private leftInputPath5, private leftInputPath6, private leftInputPath7, private leftInputPath8, private leftInputPath9, private leftInputPath10, private leftInputPath11, private leftInputPath12, private leftInputPath13, private leftInputPath14, private leftInputPath15, private leftInputPath16, private leftInputPath17, private leftInputPath18, private leftInputPath19, private rightInputPath0, private rightInputPath1, private rightInputPath2, private rightInputPath3, private rightInputPath4, private rightInputPath5, private rightInputPath6, private rightInputPath7, private rightInputPath8, private rightInputPath9, private rightInputPath10, private rightInputPath11, private rightInputPath12, private rightInputPath13, private rightInputPath14, private rightInputPath15, private rightInputPath16, private rightInputPath17, private rightInputPath18, private rightInputPath19,     private changeValue, private changeId, private changePublicKey,     private outValue, private outId, private outPublicKey    ):
+  // Check input coin is correct
+  commitmentCheck(inputValue, inputCommitment, inputId, inputPublicKey) == 1
+  publicKeyCheck(inputPublicKey, inputPrivateKey) == 1
+  invalidatorCheck(inputInvalidator, inputPrivateKey, inputId) == 1
+  rootCheck(root, inputCommitment, leftInputPath0, leftInputPath1, leftInputPath2, leftInputPath3, leftInputPath4, leftInputPath5, leftInputPath6, leftInputPath7, leftInputPath8, leftInputPath9, leftInputPath10, leftInputPath11, leftInputPath12, leftInputPath13, leftInputPath14, leftInputPath15, leftInputPath16, leftInputPath17, leftInputPath18, leftInputPath19, rightInputPath0, rightInputPath1, rightInputPath2, rightInputPath3, rightInputPath4, rightInputPath5, rightInputPath6, rightInputPath7, rightInputPath8, rightInputPath9, rightInputPath10, rightInputPath11, rightInputPath12, rightInputPath13, rightInputPath14, rightInputPath15, rightInputPath16, rightInputPath17, rightInputPath18, rightInputPath19) == 1
+  
+  // Check if output is correct
+  inputValue == outValue + changeValue
+  
+  // Check if change commitment is correct
+  commitmentCheck(changeValue, changeCommitment, changeId, changePublicKey) == 1
+  // Check if out commitment is correct
+  commitmentCheck(outValue, outCommitment, outId, outPublicKey) == 1
+  return 1

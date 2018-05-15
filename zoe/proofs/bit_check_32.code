@@ -1,0 +1,36 @@
+def main(x, i31, i30, i29, i28, i27, i26, i25, i24, i23, i22, i21, i20, i19, i18, i17, i16, i15, i14, i13, i12, i11, i10, i9, i8, i7, i6, i5, i4, i3, i2, i1, i0):
+  y = 0
+  y = y * 2 + i31
+  y = y * 2 + i30
+  y = y * 2 + i29
+  y = y * 2 + i28
+  y = y * 2 + i27
+  y = y * 2 + i26
+  y = y * 2 + i25
+  y = y * 2 + i24
+  y = y * 2 + i23
+  y = y * 2 + i22
+  y = y * 2 + i21
+  y = y * 2 + i20
+  y = y * 2 + i19
+  y = y * 2 + i18
+  y = y * 2 + i17
+  y = y * 2 + i16
+  y = y * 2 + i15
+  y = y * 2 + i14
+  y = y * 2 + i13
+  y = y * 2 + i12
+  y = y * 2 + i11
+  y = y * 2 + i10
+  y = y * 2 + i9
+  y = y * 2 + i8
+  y = y * 2 + i7
+  y = y * 2 + i6
+  y = y * 2 + i5
+  y = y * 2 + i4
+  y = y * 2 + i3
+  y = y * 2 + i2
+  y = y * 2 + i1
+  y = y * 2 + i0
+  x == y
+  return 1

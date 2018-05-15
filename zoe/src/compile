@@ -1,0 +1,2 @@
+cd ZoKrates
+./target/release/zokrates compile -i 'examples/int_to_bit.code'
