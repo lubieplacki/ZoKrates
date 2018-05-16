@@ -215,7 +215,7 @@ fn main() {
             let path = PathBuf::from(sub_matches.value_of("input").unwrap());
 
             let should_optimize = sub_matches.occurrences_of("optimized") > 0;
-            
+
             let program_flattened: FlatProg<FieldPrime> = match compile(path, should_optimize) {
                 Ok(p) => p,
                 Err(why) => panic!("Compilation failed: {}", why)
@@ -249,7 +249,7 @@ fn main() {
             hrofb.flush().expect("Unable to flush buffer.");
 
             // debugging output
-            println!("Compiled program:\n{}", program_flattened);
+            //println!("Compiled program:\n{}", program_flattened);
 
 
             println!(
@@ -284,7 +284,7 @@ fn main() {
                 .unwrap();
 
             // print deserialized flattened program
-            println!("{}", main_flattened);
+            //println!("{}", main_flattened);
 
             // validate #arguments
             let mut cli_arguments: Vec<FieldPrime> = Vec::new();
@@ -375,7 +375,7 @@ fn main() {
                 .unwrap();
 
             // print deserialized flattened program
-            println!("{}", main_flattened);
+            //println!("{}", main_flattened);
 
             // transform to R1CS
             let (variables, private_inputs_offset, a, b, c) = r1cs_program(&program_ast);

@@ -6,8 +6,10 @@ depth = input()
 print "import \"./root_check{}.code\" as rootCheck".format(depth)
 print " "
 print "// i256 inputInvalidator, i256 root, i32 outValue, i256 changeCommitment"
+
 left_private_input_path = (", ").join(["private leftInputPath{}".format(i) for i in range(0, depth)])
 left_input_path = (", ").join(["leftInputPath{}".format(i) for i in range(0, depth)])
+
 right_private_input_path = (", ").join(["private rightInputPath{}".format(i) for i in range(0, depth)])
 right_input_path = (", ").join(["rightInputPath{}".format(i) for i in range(0, depth)])
 
