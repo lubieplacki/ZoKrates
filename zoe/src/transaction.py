@@ -27,12 +27,12 @@ print "def main(inputInvalidator, root, outCommitment, changeCommitment, \
     private inputValue, private inputId, private inputPrivateKey, private inputPublicKey, \
     private inputCommitment, {}, {}, \
     private changeValue, private changeId, private changePublicKey, \
-    private outValue, private outId, private outPublicKey\
+    private outValue, private outId, private outPublicKey, \
     {}, {}, {}, \
     {}, \
     {}, {}, \
     {}, {}, {}, \
-    {}, {}, {}, \
+    {}, {}, {} \
     ):".format(
     left_private_input_path, right_private_input_path,
     privateBits("inputValue", 32), privateBits("inputId", 32), privateBits("inputPublicKey", 256),
