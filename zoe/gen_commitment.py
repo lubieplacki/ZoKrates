@@ -3,21 +3,21 @@ pk = 599394344287283835133779216515561382533850181366340279769798572240715617911
 v = 1000 # gwei
 secret = 123124214
 
-def gen_commitment_bits(pk, secret, value):
-    pk_bits = int_to_bits(pk, 256)
+def gen_commitment_bits(public_key, secret, value):
+    public_key_bits = int_to_bits(public_key, 256)
     value_bits = int_to_bits(value, 32)
     secret_bits = int_to_bits(secret, 32)
-    hash_bits = sha256(pk_bits + value_bits + secret_bits)
+    hash_bits = sha256(public_key_bits + value_bits + secret_bits)
     return hash_bits
 
-def gen_commitment(pk, secret, value):
-    return bits_to_int(gen_commitment_bits(pk, secret, value))
+def gen_commitment(public_key, secret, value):
+    return bits_to_int(gen_commitment_bits(public_key, secret, value))
 
-def gen_commitment_proof(commitment, value, secret, pk):
-    pk_bits = int_to_bits(pk, 256)
+def gen_commitment_proof(commitment, value, secret, public_key):
+    public_key_bits = int_to_bits(public_key, 256)
     value_bits = int_to_bits(value, 32)
     secret_bits = int_to_bits(secret, 32)
-    secret_input = [secret] + [pk] + value_bits + secret_bits + pk_bits
+    secret_input = [secret] + [public_key] + value_bits + secret_bits + public_key_bits
     with open("proofs/commitment/secret.input","w") as input_file:
         input_file.write("\n".join(secret_input))
     call("../../../target/release/zokrates compute-witness -a {} {} < secret.input > tmp".format(
