@@ -1,3 +1,0 @@
-import "./../sha256/sha256.code" as SHA256COMPRESS
-def main():
-  return 1

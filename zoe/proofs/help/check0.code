@@ -1,4 +1,0 @@
-import "./../bit_convert_32.code" as bitConvert32
-import "./../sha256/sha256.code" as sha256Compress
-def main(value, commitment, private id, private publicKey):
-  return 1

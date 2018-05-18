@@ -6,9 +6,9 @@ def privateBits(name, number):
     return (", ").join(["private {}Bit{}".format(name, i) for i in range(number-1, -1, -1)])
 
 bits_to_fill = 512 - 32 - 32 - 256
-print "import \"./bit_check_32.code\" as bitCheck32"
-print "import \"./bit_check_256.code\" as bitCheck256"
-print "import \"./sha256/sha256.code\" as sha256Compress"
+print "import \"./../utils/bit_check_32.code\" as bitCheck32"
+print "import \"./../utils/bit_check_256.code\" as bitCheck256"
+print "import \"./../sha256/sha256.code\" as sha256Compress"
 print "// i32 value, i256 commitment, i32 id, i32 publicKey"
 print "def main(commitment, value, private id, private publicKey, {}, {}, {}):".format(
 privateBits("value", 32),

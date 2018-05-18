@@ -4,9 +4,9 @@ def bits(name, number):
 def privateBits(name, number):
     return (", ").join(["private {}Bit{}".format(name, i) for i in range(number-1, -1, -1)])
 
-print "import \"./bit_check_32.code\" as bitCheck32"
-print "import \"./bit_check_256.code\" as bitCheck256"
-print "import \"./sha256/sha256.code\" as sha256Compress"
+print "import \"./../utils/bit_check_32.code\" as bitCheck32"
+print "import \"./../utils/bit_check_256.code\" as bitCheck256"
+print "import \"./../sha256/sha256.code\" as sha256Compress"
 
 print "def main(inputPublicKey, private inputPrivateKey, {}):".format(privateBits("inputPrivateKey", 256))
 print "  1 == bitCheck256(inputPrivateKey, {})".format(bits("inputPrivateKey", 256))
