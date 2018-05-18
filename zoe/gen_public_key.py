@@ -20,7 +20,7 @@ for i in range(0, 32):
         x = x / 2
 
 params = "{} {}".format(" ".join([str(secret_key_bits[i]) for i in range(0, 256)]), " ".join(["0" for i in range(0, 256)]))
-call("../../../target/release/zokrates compute-witness -a {}".format(params), shell=True, cwd="proofs/sha256")
+call("../../../target/release/zokrates compute-witness -a {} > tmp".format(params), shell=True, cwd="proofs/sha256")
 print "Your secret key:"
 secret_int = bits_to_int(secret_key_bits)
 print secret_int
