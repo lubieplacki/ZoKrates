@@ -20,7 +20,9 @@ for i in range(0, 32):
         x = x / 2
 
 params = "{} {}".format(" ".join([str(secret_key_bits[i]) for i in range(0, 256)]), " ".join(["0" for i in range(0, 256)]))
-call("../target/release/zokrates compute-witness -a {}".format(params), shell=True)
+call("cd proofs/sha256", shell=True)
+call("../../../target/release/zokrates compute-witness -a {}".format(params), shell=True)
+call("cd ../..", shell=True)
 print "Your secret key:"
 secret_int = bits_to_int(secret_key_bits)
 print secret_int
@@ -28,7 +30,7 @@ print secret_int
 with open("secret.key","w") as sk_file:
     sk_file.write(str(secret_int))
 witness = {}
-with open('proofs/public_key/witness', 'r') as witness_file:
+with open('proofs/sha256/witness', 'r') as witness_file:
     witness_output = (witness_file.read()).split()
     for i in range(0, len(witness_output), 2):
         witness[witness_output[i]] = witness_output[i+1]
