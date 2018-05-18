@@ -36,8 +36,8 @@ print "def main(inputInvalidator, root, outCommitment, changeCommitment, \
     {}, {}, {} \
     ):".format(
     left_private_input_path, right_private_input_path,
-    privateBits("inputValue", 32), privateBits("inputId", 32), privateBits("inputPublicKey", 256),
-    privateBits("inputPrivateKey", 256),
+    privateBits("inputValue", 32), privateBits("inputId", 32), privateBits("inputPrivateKey", 256),
+    privateBits("inputPublicKey", 256),
     left_private_input_path_bits, right_private_input_path_bits,
     privateBits("changeValue", 32), privateBits("changeId", 32), privateBits("changePublicKey", 256),
     privateBits("outValue", 32), privateBits("outId", 32), privateBits("outPublicKey", 256)

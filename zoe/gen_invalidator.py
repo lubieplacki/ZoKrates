@@ -9,6 +9,7 @@ def gen_invalidator_bits(private_key, secret):
 def gen_invalidator(private_key, secret):
     return bits_to_int(gen_invalidator(private_key, secret))
 
+# oops not used
 def gen_invalidator_proof(invalidator, private_key, secret):
     private_key_bits = int_to_bits(private_key, 256)
     secret_bits = int_to_bits(secret, 32)
