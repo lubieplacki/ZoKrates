@@ -4,3 +4,12 @@ cd ../invalidator
 ../../../target/release/zokrates compile -i 'invalidator.code'
 cd ../public_key
 ../../../target/release/zokrates compile -i 'public_key.code'
+cd ../sha256
+../../../target/release/zokrates compile -i 'sha256_placeholder.code'
+cd ../root
+../../../target/release/zokrates compile -i 'root.code'
+cd ../transaction
+../../../target/release/zokrates compile -i 'transaction.code'
+cd ../withdraw
+../../../target/release/zokrates compile -i 'withdraw.code'
+cd ../../
