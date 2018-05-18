@@ -1,0 +1,6 @@
+cd proofs/commitment
+../../../target/release/zokrates compile -i 'commitment.code'
+cd ../invalidator
+../../../target/release/zokrates compile -i 'invalidator.code'
+cd ../public_key
+../../../target/release/zokrates compile -i 'public_key.code'
