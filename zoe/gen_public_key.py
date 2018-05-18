@@ -20,20 +20,22 @@ for i in range(0, 32):
         x = x / 2
 
 params = "{} {}".format(" ".join([str(secret_key_bits[i]) for i in range(0, 256)]), " ".join(["0" for i in range(0, 256)]))
-call("../target/release/zokrates compute-witness -a {} > public_key.witness".format(params), shell=True)
+call("../target/release/zokrates compute-witness -a {}".format(params), shell=True)
 print "Your secret key:"
 secret_int = bits_to_int(secret_key_bits)
 print secret_int
 
 with open("secret.key","w") as sk_file:
     sk_file.write(str(secret_int))
-with open('public_key.witness', 'r') as witness_file:
-    witness_output_json = (witness_file.read())[9:]
+witness = {}
+with open('proofs/public_key/witness', 'r') as witness_file:
+    witness_output = (witness_file.read()).split()
+    for i in range(0, len(witness_output), 2):
+        witness[witness_output[i]] = witness_output[i+1]
 
-witness_output = json.loads(witness_output_json)
 public_key_bits = []
 for i in range(0, 256):
-    public_key_bits.append(int(witness_output["~out_{}".format(i)]))
+    public_key_bits.append(int(witness["~out_{}".format(i)]))
 
 public_int = bits_to_int(public_key_bits)
 
