@@ -24,9 +24,9 @@ print " "
 
 print "  {} = sha256Compress({}, {}, {}, {})".format(
     bits("hash", 256),
+    bits("publicKey", 256),
     bits("value", 32),
     bits("id", 32),
-    bits("publicKey", 256),
     (", ").join(["0" for i in range(0, bits_to_fill)]))
 print " "
 
