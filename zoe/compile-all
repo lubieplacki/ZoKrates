@@ -1,3 +1,4 @@
+pip install web3
 cd proofs/commitment
 ../../../target/release/zokrates compile -i 'commitment.code'
 cd ../invalidator

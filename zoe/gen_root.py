@@ -18,7 +18,7 @@ def gen_root(commitments, in_commitment, TREE_DEPTH):
         to_add = to_add * 2
     start = to_add / 2
     start = len(tree) - start
-    for i in range(start, -1, -1):
+    for i in range(start, 0, -1):
         tree[i] = bits_to_int(sha256((int_to_bits(tree[i*2], 256)).extend(int_to_bits(tree[i*2 + 1], 256))))
     left_path = []
     right_path = []
@@ -27,4 +27,4 @@ def gen_root(commitments, in_commitment, TREE_DEPTH):
         left_path.append(tree[i * 2])
         right_path.append(tree[i * 2 + 1])
         i = i / 2
-    return (tree[0], left_path, right_path)
+    return (tree[1], left_path, right_path)
