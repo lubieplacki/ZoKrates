@@ -4,8 +4,26 @@ from gen_invalidator import *
 from gen_transaction import *
 from gen_withdraw import *
 from gen_root import *
+from web3.contract import ConciseContract
+from web3 import Web3, HTTPProvider
+import json
+from solc import compile_source, compile_files, link_code
+
 maxInt = 2^32
 contract_address = 0 #0x000
+
+def init_manager():
+    compiled = compile_files("./src/Manager.sol")
+    contract_interface = compiled['<stdin>:Manager']
+    web3 = Web3(TestRPCProvider())
+    manager = web3.eth.contract(
+        contract_address,
+        abi=contract_interface['abi'],
+        ContractFactoryClass=ConciseContract,
+    )
+    return manager
+
+
 tree_depth = 21
 def random_secret():
     return random.randomint(0, maxInt)
@@ -15,8 +33,12 @@ def random_secret():
 ## *send* public_key to contract
 ## *get* verification keys
 ## save keys
-def register():
-    public_key = input("Please input your public key")
+def register(manager, public_key):
+    manager.register(public_key, transact= {
+        "from": web3.eth.accounts[0],
+        "gas": 100000,
+        "gasPrice":10**10,
+    })
     ## *send* public_key to contract
     ## *get* verification keys
     ## save keys
@@ -28,19 +50,51 @@ def register():
 ## generate commitment
 ## generate commitment proof
 ## *encode* public_key,value,secret
-## *send* commitment, value, commitment_proof, encoded message to contract
+## *send* commitment, value, commitment_proof, encrypted message to contract
 ## contract verifies proof, adds commitment to the tree and saves value
-def deposit():
-    value = input("Please input deposit value")
-    public_key = input("Please input your public key")
+def deposit(manager, value, public_key, out_address):
     secret = random_secret()
+    print "Creating commitment..."
     commitment = gen_commitment(public_key, secret, value)
+    print "Generating zksnark.."
     proof = gen_commitment_proof(commitment, public_key, secret, value)
+    print "Encrypting message..."
+    encrypted = await EthCrypto.encryptWithPublicKey(
+        out_address,
+        JSON.stringify(json.dumps({
+        "pk": public_key,
+        "secret": secret,
+        "value": value,
+        }))
+    )
+    encrypted_msg = EthCrypto.cipher.stringify(encrypted);
+    print "Depositing the funds"
+    result = manager.deposit(
+        proof['A'],
+        proof['A_p'],
+        proof['B'],
+        proof["B_p"],
+        proof["C"],
+        proof["C_p"],
+        proof["H"],
+        proof["K"],
+        commitment,
+        encrypted_msg,
+        transact= {
+            "value": value,
+            "from": web3.eth.accounts[0],
+            "gas":2 * 10**6,
+            "gasPrice":10**10,
+        },
+    )
+    print "Finished."
+    print result
     ## *encode* public_key,value,secret
-    ## *send* commitment, value, commitment_proof, encoded message to contract
+    ## *send* commitment, value, commitment_proof, encrypted message to contract
     ## print result
 
-
+def get_commitments(manager):
+    return manager.getCommitments()
 #####
 # transaction
 ## load pk, sk
@@ -59,16 +113,7 @@ def deposit():
 ## *send* transaction_proof, input_invalidator, root, change_commitment, out_commitment
 ## contract checks root, invalidator, proof, adds commitments
 
-def transaction():
-    public_key = input("Please input your public key")
-    secret_key = input("Please input your secret key")
-    out_value = input("Please input the output value")
-    out_pk = input("Please input the output public key")
-
-    in_value = input("Please input the input value")
-    in_commitment = input("Please input the input commitment")
-    in_secret = input("Please input the input id")
-
+def transaction(manager, public_key, secret_key, out_value, out_pk, out_address, change_address, in_value, in_commitment, in_secret):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     list_of_commitments = get_commitments()
@@ -86,8 +131,52 @@ def transaction():
         in_commitment, left_path, right_path,
         change_value, change_secret, public_key,
         out_value, out_secret, out_pk)
-    ## encode stuff
-    ## *send* transaction_proof, input_invalidator, root, change_commitment, out_commitment
+
+    print "Encrypting message..."
+    encrypted_out = await EthCrypto.encryptWithPublicKey(
+        out_address,
+        JSON.stringify(json.dumps({
+        "pk": out_pk,
+        "secret": out_secret,
+        "value": out_value,
+        }))
+    )
+    encrypted_msg_out = EthCrypto.cipher.stringify(encrypted_out);
+
+    print "Encrypting 2nd message..."
+    encrypted_change = await EthCrypto.encryptWithPublicKey(
+        change_address,
+        JSON.stringify(json.dumps({
+        "pk": public_key,
+        "secret": change_secret,
+        "value": change_value,
+        }))
+    )
+    encrypted_msg_change = EthCrypto.cipher.stringify(encrypted_change);
+    print "Transfering the funds..."
+    result = manager.transaction(
+        proof['A'],
+        proof['A_p'],
+        proof['B'],
+        proof["B_p"],
+        proof["C"],
+        proof["C_p"],
+        proof["H"],
+        proof["K"],
+        invalidator,
+        root,
+        commitment_out,
+        commitment_change,
+        encrypted_msg_out,
+        encrypted_msg_change,
+        transact= {
+            "from": web3.eth.accounts[0],
+            "gas":2 * 10**6,
+            "gasPrice":10**10,
+        },
+    )
+    print "Finished."
+    print result
 
 #####
 # withdraw
@@ -103,15 +192,7 @@ def transaction():
 ## gen withdraw_proof
 ## *send* withdraw_proof, input_invalidator, root, change_commitment, out_value
 ## contract checks root, invalidator, proof, adds commitment, send out_value to sender
-def withdraw():
-    public_key = input("Please input your public key")
-    secret_key = input("Please input your secret key")
-    out_value = input("Please input the output value")
-
-    in_value = input("Please input the input value")
-    in_commitment = input("Please input the input commitment")
-    in_secret = input("Please input the input id")
-
+def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     list_of_commitments = get_commitments()
@@ -126,8 +207,61 @@ def withdraw():
         in_commitment, left_path, right_path,
         change_value, change_secret, public_key,
         out_value)
-    ## *send* withdraw_proof, input_invalidator, root, change_commitment, out_value
-    ## contract checks root, invalidator, proof, adds commitment, send out_value to sender
+
+    print "Encrypting message..."
+    encrypted_change = await EthCrypto.encryptWithPublicKey(
+        change_address,
+        JSON.stringify(json.dumps({
+        "pk": public_key,
+        "secret": change_secret,
+        "value": change_value,
+        }))
+    )
+    encrypted_msg_change = EthCrypto.cipher.stringify(encrypted_change);
+    print "Transfering the funds..."
+    result = manager.transaction(
+        proof['A'],
+        proof['A_p'],
+        proof['B'],
+        proof["B_p"],
+        proof["C"],
+        proof["C_p"],
+        proof["H"],
+        proof["K"],
+        invalidator,
+        root,
+        value_out,
+        commitment_change,
+        encrypted_msg_change,
+        transact= {
+            "from": web3.eth.accounts[0],
+            "gas":2 * 10**6,
+            "gasPrice":10**10,
+        },
+    )
+    print "Finished."
+    print result
+
+def available_commitments(manager, secret_key, public_key):
+    results = manager.events.TransactionEvent.createFilter({}, { fromBlock: 0, toBlock: 'latest' }).get_all_entries()
+    print results
+    commitments = []
+    for result in results:
+        encrypted_msg = results['encrypted_msg']
+        encrypted = EthCrypto.cipher.parse(encryptedString);
+        decrypted = await EthCrypto.decryptWithPrivateKey(
+            secret_key,
+            encrypted
+        );
+        try {
+            decryptedObject = JSON.parse(decrypted);
+            if (decryptedObject['pk'] == public_key):
+                invalidator = gen_invalidator(secret_key, decryptedObject['secret'])
+                if (manager.checkInvalidator(invalidator) == false):
+                    commitments.append(decryptedObject)
+        } catch (e) {
+        }
+    return commitments
 
 #####
 # available_commitments
