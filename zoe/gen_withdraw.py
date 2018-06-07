@@ -28,7 +28,7 @@ def gen_withdraw_proof(input_invalidator, root, change_commitment,
 
     with open("proofs/withdraw/secret.input","w") as input_file:
         input_file.write("\n".join(secret_input))
-    call("../../../target/release/zokrates compute-witness -a {} {} {} {} < withdraw.input > tmp".format(
+    call("../../../target/release/zokrates compute-witness -a {} {} {} < withdraw.input > tmp".format(
     input_invalidator, root, change_commitment
     ),
     shell=True, cwd="proofs/withdraw")

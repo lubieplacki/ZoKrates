@@ -5,6 +5,7 @@ print "import \"./../commitment/commitment.code\" as commitmentCheck"
 print "import \"./../invalidator/invalidator.code\" as invalidatorCheck"
 print "import \"./../public_key/public_key.code\" as publicKeyCheck"
 print "import \"./../root/root.code\" as rootCheck".format(depth)
+print "import \"./../utils/natural.code\" as naturalCheck"
 def bits(name, number):
     return (", ").join(["{}Bit{}".format(name, i) for i in range(number-1, -1, -1)])
 
@@ -51,6 +52,8 @@ print "  1 == rootCheck(root, inputCommitment, {}, {}, {}, {})".format(left_inpu
 print "  "
 print "  // Check if output is correct"
 print "  inputValue == outValue + changeValue"
+print "  1 == naturalCheck(changeValue)"
+print "  1 == naturalCheck(outValue)"
 print "  "
 #TODO change_value has to be private
 print "  // Check if change commitment is correct"

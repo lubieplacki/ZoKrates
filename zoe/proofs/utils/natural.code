@@ -1,0 +1,4 @@
+def main(x):
+  res = if x < 0 then 0 else 1 fi
+  res == 1
+  return 1
