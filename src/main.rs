@@ -223,13 +223,10 @@ fn main() {
 
             let should_optimize = sub_matches.occurrences_of("optimized") > 0;
 
-<<<<<<< HEAD
-            let program_flattened: FlatProg<FieldPrime> = match compile(path, should_optimize) {
-=======
+
             let should_include_gadgets = sub_matches.occurrences_of("gadgets") > 0;
-            
+
             let program_flattened: FlatProg<FieldPrime> = match compile(path, should_optimize, should_include_gadgets) {
->>>>>>> upstream2/bind-libsnark-sha256
                 Ok(p) => p,
                 Err(why) => panic!("Compilation failed: {}", why)
             };
