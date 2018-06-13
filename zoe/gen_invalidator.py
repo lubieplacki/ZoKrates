@@ -1,4 +1,5 @@
 from utils import *
+from subprocess import call
 
 def gen_invalidator_bits(private_key, secret):
     private_key_bits = int_to_bits(private_key, 256)

@@ -54,11 +54,11 @@ def register(manager, public_key):
 ## contract verifies proof, adds commitment to the tree and saves value
 def deposit(manager, value, public_key, out_address):
     secret = random_secret()
-    print "Creating commitment..."
+    print("Creating commitment...")
     commitment = gen_commitment(public_key, secret, value)
-    print "Generating zksnark.."
+    print("Generating zksnark..")
     proof = gen_commitment_proof(commitment, public_key, secret, value)
-    print "Encrypting message..."
+    print("Encrypting message...")
     encrypted = await EthCrypto.encryptWithPublicKey(
         out_address,
         JSON.stringify(json.dumps({
@@ -68,7 +68,7 @@ def deposit(manager, value, public_key, out_address):
         }))
     )
     encrypted_msg = EthCrypto.cipher.stringify(encrypted);
-    print "Depositing the funds"
+    print("Depositing the funds")
     result = manager.deposit(
         proof['A'],
         proof['A_p'],
@@ -87,8 +87,8 @@ def deposit(manager, value, public_key, out_address):
             "gasPrice":10**10,
         },
     )
-    print "Finished."
-    print result
+    print("Finished.")
+    print(result)
     ## *encode* public_key,value,secret
     ## *send* commitment, value, commitment_proof, encrypted message to contract
     ## print result
@@ -132,7 +132,7 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, out_address,
         change_value, change_secret, public_key,
         out_value, out_secret, out_pk)
 
-    print "Encrypting message..."
+    print("Encrypting message...")
     encrypted_out = await EthCrypto.encryptWithPublicKey(
         out_address,
         JSON.stringify(json.dumps({
@@ -143,7 +143,7 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, out_address,
     )
     encrypted_msg_out = EthCrypto.cipher.stringify(encrypted_out);
 
-    print "Encrypting 2nd message..."
+    print("Encrypting 2nd message...")
     encrypted_change = await EthCrypto.encryptWithPublicKey(
         change_address,
         JSON.stringify(json.dumps({
@@ -153,7 +153,7 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, out_address,
         }))
     )
     encrypted_msg_change = EthCrypto.cipher.stringify(encrypted_change);
-    print "Transfering the funds..."
+    print("Transfering the funds...")
     result = manager.transaction(
         proof['A'],
         proof['A_p'],
@@ -175,8 +175,8 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, out_address,
             "gasPrice":10**10,
         },
     )
-    print "Finished."
-    print result
+    print("Finished.")
+    print(result)
 
 #####
 # withdraw
@@ -208,7 +208,7 @@ def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment
         change_value, change_secret, public_key,
         out_value)
 
-    print "Encrypting message..."
+    print("Encrypting message...")
     encrypted_change = await EthCrypto.encryptWithPublicKey(
         change_address,
         JSON.stringify(json.dumps({
@@ -218,7 +218,7 @@ def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment
         }))
     )
     encrypted_msg_change = EthCrypto.cipher.stringify(encrypted_change);
-    print "Transfering the funds..."
+    print("Transfering the funds...")
     result = manager.transaction(
         proof['A'],
         proof['A_p'],
@@ -239,12 +239,12 @@ def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment
             "gasPrice":10**10,
         },
     )
-    print "Finished."
-    print result
+    print("Finished.")
+    print(result)
 
 def available_commitments(manager, secret_key, public_key):
     results = manager.events.TransactionEvent.createFilter({}, { fromBlock: 0, toBlock: 'latest' }).get_all_entries()
-    print results
+    print(results)
     commitments = []
     for result in results:
         encrypted_msg = results['encrypted_msg']
@@ -261,6 +261,7 @@ def available_commitments(manager, secret_key, public_key):
                     commitments.append(decryptedObject)
         } catch (e) {
         }
+    print(commitments)
     return commitments
 
 #####

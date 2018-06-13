@@ -1,7 +1,5 @@
 from utils import *
-pk = 59939434428728383513377921651556138253385018136634027976979857224071561791174
-v = 1000 # gwei
-secret = 123124214
+from subprocess import call
 
 def gen_commitment_bits(public_key, secret, value):
     public_key_bits = int_to_bits(public_key, 256)

@@ -1,4 +1,5 @@
 from utils import *
+from subprocess import call
 
 def gen_transaction_proof(input_invalidator, root, out_commitment, change_commitment,
     input_value, input_id, input_private_key, input_public_key,

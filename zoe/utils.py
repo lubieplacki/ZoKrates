@@ -1,3 +1,5 @@
+from subprocess import call
+
 def bits_to_int(bits):
     res = 0
     for i in range(0, len(bits)):
