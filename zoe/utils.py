@@ -22,7 +22,7 @@ def sha256(params):
             witness[witness_output[i]] = witness_output[i+1]
 
     bits = []
-    for i in range(0, 256):
+    for i in range(255, -1, -1):
         bits.append(int(witness["~out_{}".format(i)]))
     return bits
 
@@ -43,7 +43,7 @@ def int_to_bits(x, num_bits):
     for i in range(0, num_bits):
         bits.append(x % 2)
         x = x // 2
-    return bits
+    return bits[::-1]
 
 import ast
 def raw_to_proof(proof_raw):

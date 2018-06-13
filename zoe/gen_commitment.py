@@ -16,11 +16,11 @@ def gen_commitment_proof(commitment, value, secret, public_key):
     value_bits = int_to_bits(value, 32)
     secret_bits = int_to_bits(secret, 32)
     secret_input = [secret] + [public_key] + value_bits + secret_bits + public_key_bits
-    with open("proofs/commitment/secret.input","w") as input_file:
-        input_file.write("\n".join(secret_input))
-    call("../../../target/release/zokrates compute-witness -a {} {} < secret.input > tmp".format(
+    secret_input = " ".join([str(x) for x in secret_input])
+    call("../../../target/release/zokrates compute-witness -a {} {} {} > tmp".format(
     commitment,
-    value
+    value,
+    secret_input
     ),
     shell=True, cwd="proofs/commitment")
     call("../../../target/release/zokrates generate-proof > commitment.proof", shell=True, cwd="proofs/commitment")

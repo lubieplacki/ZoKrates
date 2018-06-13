@@ -1,7 +1,7 @@
 from subprocess import call
 from utils import *
 
-secret_key = raw_input("Please provide 32-character secret seed:\n")
+secret_key = input("Please provide 32-character secret seed:\n")
 
 secret_key_bits = string_to_bits(secret_key, 32)
 
