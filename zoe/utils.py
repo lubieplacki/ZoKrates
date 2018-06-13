@@ -7,8 +7,10 @@ def bits_to_int(bits):
 def sha256(params):
     if len(params) < 512:
         params.extend([0 for i in range(0, 512 - len(params))])
-
-    params = " ".join(params)
+    params_strings = []
+    for x in params:
+        params_strings = str(x)
+    params = " ".join(params_strings)
     call("../../../target/release/zokrates compute-witness -a {} > tmp".format(params), shell=True, cwd="proofs/sha256")
 
     witness = {}
