@@ -6,7 +6,6 @@ def privateBits(name, number):
 
 print "import \"./../utils/bit_check_32.code\" as bitCheck32"
 print "import \"./../utils/bit_check_256.code\" as bitCheck256"
-print "import \"./../sha256/sha256.code\" as sha256Compress"
 print " "
 print " "
 print "def main(inputInvalidator, private inputPrivateKey, private inputId, {}, {}):".format(privateBits("inputPrivateKey", 256), privateBits("inputId", 32))
@@ -15,7 +14,7 @@ print "  "
 print "  1 == bitCheck32(inputId, {})".format(bits("inputId", 32))
 print "  "
 bits_to_fill = 512 - 256 - 32
-print "  {} = sha256Compress({}, {}, {})".format(
+print "  {} = sha256libsnark({}, {}, {})".format(
     bits("hash", 256),
     bits("inputPrivateKey", 256),
     bits("inputId", 32),

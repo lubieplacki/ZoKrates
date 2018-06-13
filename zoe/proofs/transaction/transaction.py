@@ -1,5 +1,3 @@
-#TODO figure out privacy
-
 depth = input()
 print "import \"./../commitment/commitment.code\" as commitmentCheck"
 print "import \"./../invalidator/invalidator.code\" as invalidatorCheck"

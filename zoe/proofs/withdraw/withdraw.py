@@ -1,4 +1,3 @@
-#TODO figure out privacy
 print "import \"./../commitment/commitment.code\" as commitmentCheck"
 print "import \"./../invalidator/invalidator.code\" as invalidatorCheck"
 print "import \"./../public_key/public_key.code\" as publicKeyCheck"

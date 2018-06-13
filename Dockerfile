@@ -18,7 +18,14 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     python-markdown \
+    python-pip \
+    software-properties-common \
     git
+
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install -y \
+    python3.6 \
+    python3.6-dev 
 
 RUN curl https://sh.rustup.rs -sSf | \
     sh -s -- --default-toolchain $RUST_TOOLCHAIN -y

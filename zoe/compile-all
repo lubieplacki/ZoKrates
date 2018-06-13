@@ -1,16 +1,20 @@
 pip install web3
 cd proofs/commitment
-../../../target/release/zokrates compile -i 'commitment.code'
+python commitment.py > commitment.code
+../../../target/release/zokrates compile --gadgets -i 'commitment.code'
 cd ../invalidator
-../../../target/release/zokrates compile -i 'invalidator.code'
+python invalidator.py > invalidator.code
+../../../target/release/zokrates compile --gadgets -i 'invalidator.code'
 cd ../public_key
-../../../target/release/zokrates compile -i 'public_key.code'
-cd ../sha256
-../../../target/release/zokrates compile -i 'sha256_placeholder.code'
+python public_key.py > public_key.code
+../../../target/release/zokrates compile --gadgets -i 'public_key.code'
 cd ../root
-../../../target/release/zokrates compile -i 'root.code'
+echo 10 | python root.py > root.code
+../../../target/release/zokrates compile --gadgets -i 'root.code'
 cd ../transaction
-../../../target/release/zokrates compile -i 'transaction.code'
+echo 10 | python transaction.py > transaction.code
+../../../target/release/zokrates compile --gadgets -i 'transaction.code'
 cd ../withdraw
-../../../target/release/zokrates compile -i 'withdraw.code'
+echo 10 | python withdraw.py > withdraw.code
+../../../target/release/zokrates compile --gadgets -i 'withdraw.code'
 cd ../../

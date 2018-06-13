@@ -1,0 +1,9 @@
+pip3 install virtualenv
+
+virtualenv -p /usr/bin/python3.6 ~/virtualenvs/venv
+
+source virtualenvs/venv/bin/activate
+
+pip3 install --upgrade pip setuptools
+
+pip3 install --upgrade web3
