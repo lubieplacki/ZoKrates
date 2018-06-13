@@ -35,14 +35,14 @@ def string_to_bits(string, length):
             x = ord(string[i])
         for j in range(0, 8):
             bits.append(x % 2)
-            x = x / 2
+            x = x // 2
     return bits
 
 def int_to_bits(x, num_bits):
     bits = []
     for i in range(0, num_bits):
         bits.append(x % 2)
-        x = x / 2
+        x = x // 2
     return bits
 
 import ast
