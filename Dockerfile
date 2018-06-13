@@ -8,6 +8,8 @@ ENV LIBSNARK_SOURCE_PATH=/root/libsnark-$LIBSNARK_COMMIT
 
 WORKDIR /root/
 
+
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -18,14 +20,18 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     python-markdown \
-    python-pip \
+    python3-pip \
     software-properties-common \
     git
 
-RUN add-apt-repository ppa:deadsnakes/ppa
+RUN add-apt-repository -y ppa:deadsnakes/ppa
+
+RUN add-apt-repository -y ppa:ethereum/ethereum
+
 RUN apt-get update && apt-get install -y \
     python3.6 \
-    python3.6-dev 
+    python3.6-dev \
+    ethereum
 
 RUN curl https://sh.rustup.rs -sSf | \
     sh -s -- --default-toolchain $RUST_TOOLCHAIN -y
