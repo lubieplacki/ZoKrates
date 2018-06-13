@@ -13,7 +13,6 @@ def sha256(params):
     for x in params:
         params_strings.append(str(x))
     params = " ".join(params_strings)
-    print("../../../target/release/zokrates compute-witness -a {} > tmp".format(params))
     call("../../../target/release/zokrates compute-witness -a {} > tmp".format(params), shell=True, cwd="proofs/sha256")
 
     witness = {}
