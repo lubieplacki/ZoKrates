@@ -15,3 +15,5 @@ pip3 install --upgrade ethereum
 pip3 install --upgrade py-solc
 
 pip3 install --upgrade eth-tester
+
+pip3 install -U web3[tester]

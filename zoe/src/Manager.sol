@@ -69,14 +69,14 @@ contract Manager {
     emit RegisterEvent(pk, enc_pk, msg.sender);
     return true;
   }
-  function getCommitments() public constant returns (uint[max_leaves] res_commitments) {
+  function getCommitments() view public constant returns (uint[max_leaves] res_commitments) {
     return MT.leaves;
   }
-  function checkInvalidator(uint invalidator) public constant returns (bool exists) {
+  function checkInvalidator(uint invalidator) view public constant returns (bool exists) {
     return invalidators[invalidator];
   }
 
-  function getCommitmentsTree() public constant returns (uint[tree_size] res_tree) {
+  function getCommitmentsTree() view public constant returns (uint[tree_size] res_tree) {
     uint i;
     for (i = 0; i < max_leaves; i++)
       res_tree[max_leaves + i] = MT.leaves[i];
@@ -87,7 +87,7 @@ contract Manager {
     return res_tree;
   }
 
-  function getRoot() public constant returns (uint root) {
+  function getRoot() view public constant returns (uint root) {
     return getCommitmentsTree()[1];
   }
 
