@@ -165,8 +165,8 @@ contract Manager {
       return false;
     if (MT.current + 2 >= max_leaves)
       return false;
-    add_commitment(commitment_out);
-    add_commitment(commitment_change);
+    add_commitment(public_input[2]);
+    add_commitment(public_input[3]);
     return true;
   }
 
@@ -218,7 +218,7 @@ contract Manager {
 
     if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, public_input) == false)
       return false;
-    return add_commitment(commitment_change);
+    return add_commitment(public_input[3]);
   }
 
   function withdraw(
