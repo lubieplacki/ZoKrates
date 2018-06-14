@@ -238,7 +238,7 @@ contract Manager {
     uint root,
     uint value_out,
     uint commitment_change,
-    string encrypted_message_change
+    string encrypted_msg_change
   ) public returns (bool res) {
     if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, invalidator, root, value_out, commitment_change)) {
       invalidators[invalidator] = true;
