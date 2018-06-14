@@ -242,7 +242,7 @@ def available_commitments(manager, secret_key, public_key, rsa_private_key):
                 invalidator = gen_invalidator(secret_key, decryptedObject['secret'])
                 if (manager.checkInvalidator(invalidator) == false):
                     commitments.append(decryptedObject)
-        except Exception, e:
+        except Exception as e:
             pass
     print(commitments)
     return commitments
