@@ -29,10 +29,10 @@ modulus_length = 256*8
 rsa_private_key = RSA.generate(modulus_length, Random.new().read)
 rsa_public_key = rsa_private_key.publickey()
 print("Your private encryption key:")
-print(rsa_private_key.exportKey())
+print(rsa_private_key.exportKey().decode('utf-8'))
 with open("rsa_private.key","w") as pb_file:
-    pb_file.write(rsa_private_key.exportKey())
+    pb_file.write(rsa_private_key.exportKey().decode('utf-8'))
 print("Your public encryption key:")
-print(rsa_public_key.exportKey())
+print(rsa_public_key.exportKey().decode('utf-8'))
 with open("rsa_public.key","w") as pb_file:
-    pb_file.write(rsa_public_key.exportKey())
+    pb_file.write(rsa_public_key.exportKey().decode('utf-8'))
