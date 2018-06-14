@@ -52,7 +52,7 @@ def raw_to_proof(proof_raw):
     start = False
     x = 0
     for line in proof_raw:
-        if (line.contains("Proof:")):
+        if (line.find("Proof:") != -1):
             start = True
         if (start and x < 8):
             x = x + 1

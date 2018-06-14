@@ -23,7 +23,7 @@ def init_manager():
     manager = w3.eth.contract(
         abi=contract_interface['abi'],
         bytecode=contract_interface['bin']
-        #tu będzie address
+        #address here
     )
     return manager
 
