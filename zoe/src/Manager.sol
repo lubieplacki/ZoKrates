@@ -179,17 +179,14 @@ contract Manager {
     uint[2] c_p,
     uint[2] h,
     uint[2] k,
-    uint invalidator,
-    uint root,
-    uint commitment_out,
-    uint commitment_change,
+    uint[4] public_input, //invalidator, root, commitment_out, commitment_change
     string encrypted_msg_out,
     string encrypted_msg_change
   ) public returns (bool res) {
-    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, [invalidator, root, commitment_out, commitment_change])) {
-      invalidators[invalidator] = true;
-      commitments[commitment_out] = true;
-      commitments[commitment_change] = true;
+    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, public_input)) {
+      invalidators[public_input[0]] = true;
+      commitments[public_input[2]] = true;
+      commitments[public_input[3]] = true;
       roots[getRoot()] = true;
       emit TransactionEvent(encrypted_msg_out);
       emit TransactionEvent(encrypted_msg_change);
@@ -230,17 +227,14 @@ contract Manager {
     uint[2] c_p,
     uint[2] h,
     uint[2] k,
-    uint invalidator,
-    uint root,
-    uint value_out,
-    uint commitment_change,
+    uint[4] public_input, //invalidator, root, value_out, commitment_change
     string encrypted_msg_change
   ) public returns (bool res) {
-    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, [invalidator, root, value_out, commitment_change])) {
-      invalidators[invalidator] = true;
-      commitments[commitment_change] = true;
+    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, public_input)) {
+      invalidators[public_input[0]] = true;
+      commitments[public_input[3]] = true;
       roots[getRoot()] = true;
-      msg.sender.transfer(value_out);
+      msg.sender.transfer(public_input[2]);
       emit TransactionEvent(encrypted_msg_change);
       return true;
     } else {
