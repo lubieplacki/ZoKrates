@@ -236,14 +236,14 @@ def available_commitments(manager, secret_key, public_key, rsa_private_key):
     for result in results:
         encrypted_msg = results['encrypted_msg']
         decrypted = decrypt(encrypted_msg, rsa_private_key)
-        try {
+        try:
             decryptedObject = ast.literal_eval(decrypted)
             if (decryptedObject['pk'] == public_key):
                 invalidator = gen_invalidator(secret_key, decryptedObject['secret'])
                 if (manager.checkInvalidator(invalidator) == false):
                     commitments.append(decryptedObject)
-        } catch (e) {
-        }
+        except Exception, e:
+            pass
     print(commitments)
     return commitments
 
