@@ -5,18 +5,19 @@ from gen_transaction import *
 from gen_withdraw import *
 from gen_root import *
 from web3.contract import ConciseContract
-from web3 import Web3, HTTPProvider
+from web3 import Web3, HTTPProvider, EthereumTesterProvider
 import json
 from solc import compile_source, compile_files, link_code
 import ast
+from Crypto.PublicKey import RSA
 
 maxInt = 2^32
 contract_address = 0 #0x000
 
 def init_manager():
     compiled = compile_files(["./src/Manager.sol"])
-    contract_interface = compiled['<stdin>:Manager']
-    web3 = Web3(TestRPCProvider())
+    contract_interface = compiled['./src/Manager.sol:Manager']
+    web3 = Web3(EthereumTesterProvider())
     manager = web3.eth.contract(
         contract_address,
         abi=contract_interface['abi'],
@@ -27,7 +28,7 @@ def init_manager():
 
 tree_depth = 21
 def random_secret():
-    return random.randomint(0, maxInt)
+    return random.randint(0, maxInt)
 ####
 # register
 ## generate public_key
@@ -43,6 +44,12 @@ def register(manager, public_key, rsa_public_key):
     ## *send* public_key to contract
     ## *get* verification keys
     ## save keys
+def load_key(path):
+    res = ""
+    with open(path,"r") as key_file:
+        res = key_file.load()
+    return res
+
 def encrypt(msg, rsa_public_key):
     return rsa_public_key.encrypt(msg.encode("utf-8"), 32)[0]
 
