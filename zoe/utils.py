@@ -54,7 +54,7 @@ def raw_to_proof(proof_raw):
     for line in proof_raw:
         if (line.contains("Proof:")):
             start = True
-        if (start && x < 8):
+        if (start and x < 8):
             x = x + 1
             line = line.split(" = ")
             proof[line[0]] = ast.literal_eval("[{}]".format(line[1][16: -2]))
