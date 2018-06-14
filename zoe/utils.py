@@ -52,11 +52,11 @@ def raw_to_proof(proof_raw):
     start = False
     x = 0
     for line in proof_raw:
-        if (line.find("Proof:") != -1):
-            start = True
         if (start and x < 8):
             x = x + 1
             line = line.split(" = ")
             proof[line[0]] = ast.literal_eval("[{}]".format(line[1][16: -2]))
+        if (start == False and line.find("Proof:") != -1):
+            start = True
 
     return proof
