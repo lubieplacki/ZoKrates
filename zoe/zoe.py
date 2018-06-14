@@ -10,6 +10,7 @@ import json
 from solc import compile_source, compile_files, link_code
 import ast
 from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
 
 maxInt = 2^32
 contract_address = 0 #0x000
@@ -17,9 +18,9 @@ contract_address = 0 #0x000
 def init_manager():
     compiled = compile_files(["./src/Manager.sol"])
     contract_interface = compiled['./src/Manager.sol:Manager']
-    web3 = Web3(EthereumTesterProvider())
-    manager = web3.eth.contract(
-        contract_address,
+    w3 = Web3(EthereumTesterProvider())
+    w3.eth.defaultAccount = w3.eth.accounts[0]
+    manager = w3.eth.contract(
         abi=contract_interface['abi'],
         ContractFactoryClass=ConciseContract,
     )
@@ -47,21 +48,26 @@ def register(manager, public_key, rsa_public_key):
 def load_key(path):
     res = ""
     with open(path,"r") as key_file:
-        res = key_file.load()
+        res = key_file.read()
     return res
 
-def encrypt(msg, rsa_public_key):
-    return rsa_public_key.encrypt(msg.encode("utf-8"), 32)[0]
+def encrypt(msg, rsa_key):
+    if (isinstance(rsa_key, str)):
+        rsa_key = RSA.importKey(rsa_key)
+    encryptor = PKCS1_OAEP.new(rsa_key)
+    return encryptor.encrypt(bytes(msg,"utf-8"))
 
-def decrypt(msg, rsa_private_key):
-    return rsa_private_key.decrypt(msg).decode("utf-8")
+def decrypt(msg, rsa_key):
+    if (isinstance(rsa_key, str)):
+        rsa_key = RSA.importKey(rsa_key)
+    decryptor = PKCS1_OAEP.new(rsa_key)
+    return decryptor.decrypt(ast.literal_eval(str(msg))).decode("utf-8")
 
 def encrypt_msg(public_key, secret, value, rsa_key_str):
-    rsa_key = RSA.importKey(rsa_key_str)
-    return encrypt("{'pk':{}, 'secret':{}, 'value':{}}".format(
+    return encrypt("{" + "\'pk\':{}, \'secret\':{}, \'value\':{}".format(
         public_key,
         secret,
-        value),
+        value) + "}",
         rsa_key
     )
 ####
@@ -242,8 +248,8 @@ def available_commitments(manager, secret_key, public_key, rsa_private_key):
     commitments = []
     for result in results:
         encrypted_msg = results['encrypted_msg']
-        decrypted = decrypt(encrypted_msg, rsa_private_key)
         try:
+            decrypted = decrypt(encrypted_msg, rsa_private_key)
             decryptedObject = ast.literal_eval(decrypted)
             if (decryptedObject['pk'] == public_key):
                 invalidator = gen_invalidator(secret_key, decryptedObject['secret'])
