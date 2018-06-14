@@ -82,7 +82,7 @@ contract Manager {
       res_tree[max_leaves + i] = MT.leaves[i];
 
     for (i = max_leaves - 1; i >= 0; i--)
-      res_tree[i] = sha256(res_tree[2 * i], res_tree[2 * i + 1]);
+      res_tree[i] = uint(sha256(res_tree[2 * i], res_tree[2 * i + 1]));
 
     return res_tree;
   }
@@ -150,20 +150,18 @@ contract Manager {
     uint[2] c_p,
     uint[2] h,
     uint[2] k,
-    uint invalidator,
-    uint root,
-    uint commitment_out,
-    uint commitment_change
+    uint[4] public_input
   ) internal returns (bool res) {
-    if (invalidators[invalidator])
+    if (invalidators[public_input[0]])
       return false;
-    if (commitments[commitment_change])
+    if (roots[public_input[1]] == false)
+        return false;
+    if (commitments[public_input[2]])
       return false;
-    if (commitments[commitment_out])
+    if (commitments[public_input[3]])
       return false;
-    if (roots[root] == false)
-      return false;
-    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [invalidator, root, commitment_out, commitment_change]) == false)
+
+    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, public_input) == false)
       return false;
     if (MT.current + 2 >= max_leaves)
       return false;
@@ -188,7 +186,7 @@ contract Manager {
     string encrypted_msg_out,
     string encrypted_msg_change
   ) public returns (bool res) {
-    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, invalidator, root, commitment_out, commitment_change)) {
+    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, [invalidator, root, commitment_out, commitment_change])) {
       invalidators[invalidator] = true;
       commitments[commitment_out] = true;
       commitments[commitment_change] = true;
@@ -209,18 +207,16 @@ contract Manager {
     uint[2] c_p,
     uint[2] h,
     uint[2] k,
-    uint invalidator,
-    uint root,
-    uint value_out,
-    uint commitment_change
+    uint[4] public_input
   ) internal returns (bool res) {
-    if (invalidators[invalidator])
+    if (invalidators[public_input[0]])
       return false;
-    if (commitments[commitment_change])
+    if (roots[public_input[1]] == false)
+        return false;
+    if (commitments[public_input[3]])
       return false;
-    if (roots[root] == false)
-      return false;
-    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [invalidator, root, value_out, commitment_change]) == false)
+
+    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, public_input) == false)
       return false;
     return add_commitment(commitment_change);
   }
@@ -240,7 +236,7 @@ contract Manager {
     uint commitment_change,
     string encrypted_msg_change
   ) public returns (bool res) {
-    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, invalidator, root, value_out, commitment_change)) {
+    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, [invalidator, root, value_out, commitment_change])) {
       invalidators[invalidator] = true;
       commitments[commitment_change] = true;
       roots[getRoot()] = true;

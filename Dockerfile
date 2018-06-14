@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     python-markdown \
     python3-pip \
     software-properties-common \
+    nano \
     git
 
 RUN add-apt-repository -y ppa:deadsnakes/ppa
