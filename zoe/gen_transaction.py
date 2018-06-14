@@ -29,11 +29,9 @@ def gen_transaction_proof(input_invalidator, root, out_commitment, change_commit
     out_value, out_id, out_public_key] + input_value_bits + input_id_bits + input_private_key_bits + \
     input_public_key_bits + left_path_bits + right_path_bits + change_value_bits + \
     change_id_bits + change_public_key_bits + out_value_bits + out_id_bits + out_public_key_bits
-
-    with open("proofs/transaction/secret.input","w") as input_file:
-        input_file.write("\n".join(secret_input))
-    call("../../../target/release/zokrates compute-witness -a {} {} {} {} < transaction.input > tmp".format(
-    input_invalidator, root, out_commitment, change_commitment
+    secret_input = " ".join([str(x) for x in secret_input])
+    call("../../../target/release/zokrates compute-witness -a {} {} {} {} {} > tmp".format(
+    input_invalidator, root, out_commitment, change_commitment, secret_input
     ),
     shell=True, cwd="proofs/transaction")
     call("../../../target/release/zokrates generate-proof > transaction.proof", shell=True, cwd="proofs/transaction")

@@ -49,8 +49,14 @@ import ast
 def raw_to_proof(proof_raw):
     proof_raw = proof_raw.splitlines()
     proof = {}
+    start = False
+    x = 0
     for line in proof_raw:
-        line = line.split(" = ")
-        proof[line[0]] = ast.literal_eval("[{}]".format(line[1]))
+        if (line.contains("Proof:")):
+            start = True
+        if (start && x < 8):
+            x = x + 1
+            line = line.split(" = ")
+            proof[line[0]] = ast.literal_eval("[{}]".format(line[1][16: -2]))
 
     return proof

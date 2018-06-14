@@ -27,10 +27,9 @@ def gen_withdraw_proof(input_invalidator, root, change_commitment,
     input_public_key_bits + left_path_bits + right_path_bits + change_value_bits + \
     change_id_bits + change_public_key_bits
 
-    with open("proofs/withdraw/secret.input","w") as input_file:
-        input_file.write("\n".join(secret_input))
-    call("../../../target/release/zokrates compute-witness -a {} {} {} < withdraw.input > tmp".format(
-    input_invalidator, root, change_commitment
+    secret_input = " ".join([str(x) for x in secret_input])
+    call("../../../target/release/zokrates compute-witness -a {} {} {} {} > tmp".format(
+    input_invalidator, root, change_commitment, secret_input
     ),
     shell=True, cwd="proofs/withdraw")
     call("../../../target/release/zokrates generate-proof > withdraw.proof", shell=True, cwd="proofs/withdraw")

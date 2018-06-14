@@ -16,10 +16,10 @@ def gen_invalidator_proof(invalidator, private_key, secret):
     secret_bits = int_to_bits(secret, 32)
 
     secret_input = [private_key] + [secret] + private_key_bits + secret_bits
-    with open("proofs/invalidator/secret.input","w") as input_file:
-        input_file.write("\n".join(secret_input))
-    call("../../../target/release/zokrates compute-witness -a {} < secret.input > tmp".format(
-    invalidator
+    secret_input = " ".join([str(x) for x in secret_input])
+    call("../../../target/release/zokrates compute-witness -a {} {} > tmp".format(
+    invalidator,
+    secret_input
     ),
     shell=True, cwd="proofs/invalidator")
     call("../../../target/release/zokrates generate-proof > invalidator.proof", shell=True, cwd="proofs/invalidator")

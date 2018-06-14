@@ -47,7 +47,7 @@ contract Manager {
   mapping (uint => bool) public commitments;
   mapping (uint => bool) public roots;
   event TransactionEvent(string encrypted_msg);
-  event RegisterEvent(uint pk, address from);
+  event RegisterEvent(uint pk, string enc_pk, address from);
   uint constant max_leaves = 2**10;
   uint constant tree_size = 2**11;
   struct Mtree {
@@ -65,8 +65,8 @@ contract Manager {
     for (i = 0; i < max_leaves; i++)
       MT.leaves[i] = 0x0;
   }
-  function register(uint pk) public returns (bool res) {
-    emit RegisterEvent(pk, msg.from);
+  function register(uint pk, string enc_pk) public returns (bool res) {
+    emit RegisterEvent(pk, enc_pk, msg.from);
     return true;
   }
   function getCommitments() public constant returns (uint[max_leaves] res_commitments) {
