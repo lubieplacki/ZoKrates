@@ -31,7 +31,8 @@ RUN add-apt-repository -y ppa:ethereum/ethereum
 RUN apt-get update && apt-get install -y \
     python3.6 \
     python3.6-dev \
-    ethereum
+    ethereum \
+    solc
 
 RUN curl https://sh.rustup.rs -sSf | \
     sh -s -- --default-toolchain $RUST_TOOLCHAIN -y

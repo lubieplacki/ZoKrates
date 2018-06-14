@@ -14,7 +14,7 @@ maxInt = 2^32
 contract_address = 0 #0x000
 
 def init_manager():
-    compiled = compile_files("./src/Manager.sol")
+    compiled = compile_files(["./src/Manager.sol"])
     contract_interface = compiled['<stdin>:Manager']
     web3 = Web3(TestRPCProvider())
     manager = web3.eth.contract(

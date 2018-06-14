@@ -52,7 +52,7 @@ contract Manager {
   uint constant tree_size = 2**11;
   struct Mtree {
     uint current;
-    uint[idx] leaves;
+    uint[max_leaves] leaves;
   }
   Mtree public MT;
 

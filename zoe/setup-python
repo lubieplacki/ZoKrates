@@ -8,4 +8,8 @@ pip3 install --upgrade pip setuptools
 
 pip3 install --upgrade web3
 
-pip3 install pycrypto
+pip3 install --upgrade pycrypto
+
+pip3 install --upgrade ethereum
+
+pip3 install --upgrade py-solc
