@@ -66,7 +66,7 @@ contract Manager {
       MT.leaves[i] = 0x0;
   }
   function register(uint pk, string enc_pk) public returns (bool res) {
-    emit RegisterEvent(pk, enc_pk, msg.from);
+    emit RegisterEvent(pk, enc_pk, msg.sender);
     return true;
   }
   function getCommitments() public constant returns (uint[max_leaves] res_commitments) {
