@@ -87,10 +87,10 @@ contract Manager {
     return res_tree;
   }
 
-  function getSha256UInt(uint8 input[512]) view public returns (uint hash) {
+  function getSha256UInt(uint8[512] input) view public returns (uint hash) {
     return uint(sha256(input));
   }
-  function getSha256(uint8 input[512]) view public returns (bytes32 hash) {
+  function getSha256(uint8[512] input) view public returns (bytes32 hash) {
     return sha256(input);
   }
 
