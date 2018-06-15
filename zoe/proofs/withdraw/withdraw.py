@@ -47,6 +47,8 @@ print "  1 == rootCheck(root, inputCommitment, {}, {}, {}, {})".format(left_inpu
 print "  "
 print "  // Check if output is correct"
 print "  inputValue == outValue + changeValue"
+print "  1 == naturalCheck(changeValue)"
+print "  1 == naturalCheck(outValue)"
 print "  "
 #TODO change_value has to be private
 print "  // Check if change commitment is correct"
