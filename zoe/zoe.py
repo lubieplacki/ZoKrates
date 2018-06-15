@@ -26,7 +26,7 @@ def init_manager(w3, manager_address):
         address=manager_address
         #address here
     )
-    return ConciseContract(manager)
+    return manager
 
 
 tree_depth = 21
@@ -39,11 +39,7 @@ def random_secret():
 ## *get* verification keys
 ## save keys
 def register(manager, public_key, rsa_public_key):
-    manager.register(public_key, rsa_public_key, transact= {
-        "from": web3.eth.accounts[0],
-        "gas": 100000,
-        "gasPrice":10**10,
-    })
+    return manager.functions.register(public_key, rsa_public_key).transct()
     ## *send* public_key to contract
     ## *get* verification keys
     ## save keys
@@ -93,7 +89,7 @@ def deposit(manager, value, public_key, rsa_public_key):
     encrypted_msg = encrypt_msg(public_key, secret, value, rsa_public_key)
 
     print("Depositing the funds")
-    result = manager.deposit(
+    result = manager.functions.deposit(
         proof['A'],
         proof['A_p'],
         proof['B'],
@@ -104,13 +100,12 @@ def deposit(manager, value, public_key, rsa_public_key):
         proof["K"],
         commitment,
         encrypted_msg,
-        transact= {
-            "value": value,
-            "from": web3.eth.accounts[0],
-            "gas":2 * 10**6,
-            "gasPrice":10**10,
-        },
-    )
+    ).transact({
+        "value": value,
+        "from": web3.eth.accounts[0],
+        "gas":2 * 10**6,
+        "gasPrice":10**10,
+    })
     print("Finished.")
     print(result)
     ## *encode* public_key,value,secret
@@ -118,7 +113,7 @@ def deposit(manager, value, public_key, rsa_public_key):
     ## print result
 
 def get_commitments(manager):
-    return manager.getCommitments()
+    return manager.functions.getCommitments().call()
 #####
 # transaction
 ## load pk, sk
@@ -163,7 +158,7 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, rsa_public_k
     encrypted_msg_change = encrypt_msg(public_key, change_secret, change_value, rsa_public_key_change)
 
     print("Transfering the funds...")
-    result = manager.transaction(
+    result = manager.functions.transaction(
         proof['A'],
         proof['A_p'],
         proof['B'],
@@ -178,12 +173,12 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, rsa_public_k
         commitment_change],
         encrypted_msg_out,
         encrypted_msg_change,
-        transact= {
-            "from": web3.eth.accounts[0],
-            "gas":2 * 10**6,
-            "gasPrice":10**10,
-        },
-    )
+    ).transact({
+        "value": value,
+        "from": web3.eth.accounts[0],
+        "gas":2 * 10**6,
+        "gasPrice":10**10,
+    })
     print("Finished.")
     print(result)
 
@@ -221,7 +216,7 @@ def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment
     encrypted_msg_change = encrypt_msg(public_key, change_secret, change_value, rsa_public_key_change)
 
     print("Transfering the funds...")
-    result = manager.transaction(
+    result = manager.functions.transaction(
         proof['A'],
         proof['A_p'],
         proof['B'],
@@ -235,12 +230,12 @@ def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment
         value_out,
         commitment_change],
         encrypted_msg_change,
-        transact= {
-            "from": web3.eth.accounts[0],
-            "gas":2 * 10**6,
-            "gasPrice":10**10,
-        },
-    )
+    ).transact({
+        "value": value,
+        "from": web3.eth.accounts[0],
+        "gas":2 * 10**6,
+        "gasPrice":10**10,
+    })
     print("Finished.")
     print(result)
 
@@ -249,7 +244,7 @@ def available_commitments(manager, secret_key, public_key, rsa_private_key):
     print(results)
     commitments = []
     for result in results:
-        encrypted_msg = results['encrypted_msg']
+        encrypted_msg = results['args']['encrypted_msg']
         try:
             decrypted = decrypt(encrypted_msg, rsa_private_key)
             decryptedObject = ast.literal_eval(decrypted)
@@ -262,6 +257,9 @@ def available_commitments(manager, secret_key, public_key, rsa_private_key):
     print(commitments)
     return commitments
 
+def available_addresses(manager):
+    results = manager.events.RegisterEvent.createFilter(fromBlock= 0, toBlock= 'latest').get_all_entries()
+    return results
 #####
 # available_commitments
 ## *scan* invalidators

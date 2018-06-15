@@ -8,7 +8,7 @@ def gen_root(commitments, in_commitment, TREE_DEPTH):
         if commitments[i] == in_commitment:
             break
     to_add = 1
-    tree = []
+    tree = [0]
     for i in range(0, TREE_DEPTH):
         for j in range(0, to_add):
             if i != TREE_DEPTH - 1 or j >= len(commitments):
@@ -16,7 +16,10 @@ def gen_root(commitments, in_commitment, TREE_DEPTH):
             else:
                 tree.append(commitments[j])
         to_add = to_add * 2
-    start = to_add / 2
+    start = to_add // 2
+    print(tree)
+    print(len(tree))
+    print(start)
     start = len(tree) - start
     for i in range(start, 0, -1):
         tree[i] = bits_to_int(sha256((int_to_bits(tree[i*2], 256)).extend(int_to_bits(tree[i*2 + 1], 256))))

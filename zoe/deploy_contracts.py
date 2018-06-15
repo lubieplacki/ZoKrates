@@ -33,10 +33,14 @@ def deploy_all(w3):
         abi=contract_interface['abi'],
         bytecode=contract_interface['bin']
     )
-    tx_hash = manager.constructor(commitment.address, transaction.address, withdraw.address).transact()
+    tx_hash = manager.constructor(commitment.address, transaction.address, withdraw.address).transact({"gas": 3100000})
     tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
     manager = w3.eth.contract(
         address=tx_receipt.contractAddress,
         abi=contract_interface['abi'],
     )
     return manager, commitment, transaction, withdraw
+
+def deploy_manager(w3):
+    manager, _, _, _ = deploy_all(w3)
+    return manager

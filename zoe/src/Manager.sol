@@ -48,8 +48,8 @@ contract Manager {
   mapping (uint => bool) public roots;
   event TransactionEvent(string encrypted_msg);
   event RegisterEvent(uint pk, string enc_pk, address from);
-  uint constant max_leaves = 2**10;
-  uint constant tree_size = 2**11;
+  uint constant max_leaves = 64;
+  uint constant tree_size = 128;
   struct Mtree {
     uint current;
     uint[max_leaves] leaves;
@@ -81,10 +81,14 @@ contract Manager {
     for (i = 0; i < max_leaves; i++)
       res_tree[max_leaves + i] = MT.leaves[i];
 
-    for (i = max_leaves - 1; i >= 0; i--)
+    for (i = max_leaves - 1; i > 0; i--)
       res_tree[i] = uint(sha256(res_tree[2 * i], res_tree[2 * i + 1]));
 
     return res_tree;
+  }
+
+  function getSha256(uint8 input[512]) view public returns (uint hash) {
+    return uint(sha256(input));
   }
 
   function getRoot() view public returns (uint root) {
