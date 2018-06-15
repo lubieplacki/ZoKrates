@@ -15,17 +15,18 @@ from Crypto.Cipher import PKCS1_OAEP
 maxInt = 2^32
 contract_address = 0 #0x000
 
-def init_manager():
+def init_manager(w3, manager_address):
+    #w3 = Web3(EthereumTesterProvider())
     compiled = compile_files(["./src/Manager.sol"])
     contract_interface = compiled['./src/Manager.sol:Manager']
-    w3 = Web3(EthereumTesterProvider())
+
     w3.eth.defaultAccount = w3.eth.accounts[0]
     manager = w3.eth.contract(
         abi=contract_interface['abi'],
-        bytecode=contract_interface['bin']
+        address=manager_address
         #address here
     )
-    return manager
+    return ConciseContract(manager)
 
 
 tree_depth = 21
