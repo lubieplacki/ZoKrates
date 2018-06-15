@@ -1,6 +1,7 @@
 print "import \"./../commitment/commitment.code\" as commitmentCheck"
 print "import \"./../invalidator/invalidator.code\" as invalidatorCheck"
 print "import \"./../public_key/public_key.code\" as publicKeyCheck"
+print "import \"./../utils/natural.code\" as naturalCheck"
 depth = input()
 def bits(name, number):
     return (", ").join(["{}Bit{}".format(name, i) for i in range(number-1, -1, -1)])
