@@ -87,12 +87,30 @@ contract Manager {
     return res_tree;
   }
 
-  function getSha256UInt(uint8[512] input) view public returns (uint hash) {
-    return uint(sha256(input));
-  }
-  function getSha256(uint8[512] input) view public returns (bytes32 hash) {
-    return sha256(input);
-  }
+  function getSha256UInt(uint8[64] input) view public returns (uint hash) {
+     return uint(sha256(input));
+   }
+   function getSha256(uint8[64] input) view public returns (bytes32 hash) {
+     return sha256(input);
+   }
+   function getSha256_UInt(uint input1, uint input2) view public returns (uint hash) {
+     return uint(sha256(input1, input2));
+   }
+   function getSha256_(uint input1, uint input2) view public returns (bytes32 hash) {
+     return sha256(input1, input2);
+   }
+   function getSha256_8(uint8[32] input1, uint8[32] input2) view public returns (bytes32 hash) {
+     return sha256(input1, input2);
+   }
+   function getSha256_8UInt(uint8[32] input1, uint8[32] input2) view public returns (uint hash) {
+     return uint(sha256(input1, input2));
+   }
+   function getSha256_bytes_(bytes32 input, bytes32 input2) view public returns (bytes32 hash) {
+     return sha256(input, input2);
+   }
+   function getSha256_bytes_UInt(bytes32 input, bytes32 input2) view public returns (uint hash) {
+     return uint(sha256(input, input2));
+   }
 
   function getRoot() view public returns (uint root) {
     return getCommitmentsTree()[1];
