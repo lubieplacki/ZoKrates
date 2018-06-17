@@ -29,7 +29,7 @@ def init_manager(w3, manager_address):
     return manager
 
 
-tree_depth = 21
+tree_depth = 7
 def random_secret():
     return random.randint(0, maxInt)
 ####

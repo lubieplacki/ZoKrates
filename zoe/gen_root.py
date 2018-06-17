@@ -16,18 +16,16 @@ def gen_root(commitments, in_commitment, TREE_DEPTH):
             else:
                 tree.append(commitments[j])
         to_add = to_add * 2
-    start = to_add // 2
-    print(tree)
-    print(len(tree))
-    print(start)
-    start = len(tree) - start
+    start = to_add // 2 - 1
     for i in range(start, 0, -1):
-        tree[i] = bits_to_int(sha256((int_to_bits(tree[i*2], 256)).extend(int_to_bits(tree[i*2 + 1], 256))))
+        bits = int_to_bits(tree[i*2], 256)
+        bits.extend(int_to_bits(tree[i*2 + 1], 256))
+        tree[i] = bits_to_int(sha256(bits))
     left_path = []
     right_path = []
-    i = (start + x) / 2
+    i = (start + x + 1) // 2
     while i > 0:
         left_path.append(tree[i * 2])
         right_path.append(tree[i * 2 + 1])
-        i = i / 2
+        i = i // 2
     return (tree[1], left_path, right_path)
