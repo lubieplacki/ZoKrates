@@ -12,6 +12,7 @@ using std::vector;
 #include "wraplibsnarkgadgets.hpp"
 #include <libsnark/gadgetlib1/gadgets/hashes/sha256/sha256_gadget.hpp>
 #include <libsnark/zk_proof_systems/ppzksnark/r1cs_ppzksnark/r1cs_ppzksnark.hpp>
+#include "sha256_ethereum_gadget.cpp"
 
 typedef libff::Fr<alt_bn128_pp> FieldT;
 
@@ -37,7 +38,7 @@ void constraint_to_json(linear_combination<FieldT> constraints, std::stringstrea
         if (count != 0) {
             ss << ",";
         }
-        
+
         ss << '"' << lt.index << '"' << ":" << '"' << lt.coeff << '"';
         count++;
     }
@@ -80,9 +81,10 @@ char* _sha256Constraints()
     digest_variable<FieldT> right(pb, SHA256_digest_size, "right");
     digest_variable<FieldT> output(pb, SHA256_digest_size, "output");
 
-    sha256_two_to_one_hash_gadget<FieldT> f(pb, left, right, output, "f");
+    sha256_ethereum f(pb, left, right, output, "f");
+    //sha256_two_to_one_hash_gadget<FieldT> f(pb, left, right, output, "f");
     f.generate_r1cs_constraints();
-    
+
     auto json = r1cs_to_json(pb);
 
     auto result = new char[json.size()];
@@ -110,28 +112,19 @@ std::string array_to_json(protoboard<FieldT> pb)
     return(ss.str());
 }
 
-pb_variable_array<FieldT> from_bits(std::vector<bool> bits, pb_variable<FieldT>& ZERO) {
-    pb_variable_array<FieldT> acc;
-
-    for (size_t i = 0; i < bits.size(); i++) {
-        bool bit = bits[i];
-        acc.emplace_back(bit ? ONE : ZERO);
-    }
-    return acc;
-    }
-
 char* _sha256Witness(const uint8_t* inputs, int inputs_length)
 {
 
     libff::alt_bn128_pp::init_public_params();
-    
+
     protoboard<FieldT> pb;
 
     digest_variable<FieldT> left(pb, SHA256_digest_size, "left");
     digest_variable<FieldT> right(pb, SHA256_digest_size, "right");
     digest_variable<FieldT> output(pb, SHA256_digest_size, "output");
 
-    sha256_two_to_one_hash_gadget<FieldT> f(pb, left, right, output, "f");
+    sha256_ethereum f(pb, left, right, output, "f");
+    //sha256_two_to_one_hash_gadget<FieldT> f(pb, left, right, output, "f");
     f.generate_r1cs_constraints(true);
 
     libff::bit_vector left_bv;
@@ -148,7 +141,7 @@ char* _sha256Witness(const uint8_t* inputs, int inputs_length)
     right.generate_r1cs_witness(right_bv);
 
     f.generate_r1cs_witness();
-    
+
     assert(pb.is_satisfied());
 
     auto json = array_to_json(pb);
@@ -156,4 +149,3 @@ char* _sha256Witness(const uint8_t* inputs, int inputs_length)
     memcpy(result, json.c_str(), json.size() + 1);
     return result;
 }
-
