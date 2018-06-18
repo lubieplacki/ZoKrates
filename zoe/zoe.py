@@ -12,7 +12,7 @@ import ast
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
-maxInt = 2^32
+maxInt = 2**32
 contract_address = 0 #0x000
 
 def init_manager(w3, manager_address):
@@ -39,7 +39,7 @@ def random_secret():
 ## *get* verification keys
 ## save keys
 def register(manager, public_key, rsa_public_key):
-    return manager.functions.register(public_key, rsa_public_key).transct()
+    return manager.functions.register(public_key, rsa_public_key).transact()
     ## *send* public_key to contract
     ## *get* verification keys
     ## save keys
@@ -61,7 +61,7 @@ def decrypt(msg, rsa_key):
     decryptor = PKCS1_OAEP.new(rsa_key)
     return decryptor.decrypt(ast.literal_eval(str(msg))).decode("utf-8")
 
-def encrypt_msg(public_key, secret, value, rsa_key_str):
+def encrypt_msg(public_key, secret, value, rsa_key):
     return encrypt("{" + "\'pk\':{}, \'secret\':{}, \'value\':{}".format(
         public_key,
         secret,

@@ -49,4 +49,4 @@ def load_keys():
     with open("rsa_public.key","r") as pb_file:
         rsa_public_key = pb_file.read()
 
-    return secret_int, public_int, rsa_private_key, rsa_public_key
+    return int(secret_int), int(public_int), rsa_private_key, rsa_public_key

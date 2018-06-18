@@ -43,7 +43,7 @@ def int_to_bits(x, num_bits):
     for i in range(0, num_bits):
         bits.append(x % 2)
         x = x // 2
-    return bits[::-1]
+    return bits
 
 import ast
 def raw_to_proof(proof_raw):
