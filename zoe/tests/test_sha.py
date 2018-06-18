@@ -6,11 +6,7 @@ zero64 = [0 for x in range(0,64)]
 zeroU = 0
 zero32 = [0 for x in range(0,32)]
 zeroB = w3.toBytes(hexstr='0x0000000000000000000000000000000000000000000000000000000000000000')
-m.functions.getCommitmentsTree().call()
-m.functions.getSha256UInt(zero64).call()
-m.functions.getSha256_8UInt(zero32, zero32).call()
 m.functions.getSha256_UInt(zeroU, zeroU).call()
-m.functions.getSha256_bytes_UInt(zeroB, zeroB).call()
 from utils import *
 sha256(zero512)
 bits_to_int(sha256(zero512))

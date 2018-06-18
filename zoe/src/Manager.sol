@@ -11,7 +11,7 @@ contract DepositVerifier {
             uint[2] h,
             uint[2] k,
             uint[3] input
-        ) returns (bool) {}
+        ) public returns (bool) {}
 }
 contract TransactionVerifier {
   function verifyTx(
@@ -23,8 +23,8 @@ contract TransactionVerifier {
             uint[2] c_p,
             uint[2] h,
             uint[2] k,
-            uint[4] input
-        ) returns (bool) {}
+            uint[5] input
+        ) public returns (bool) {}
 }
 contract WithdrawVerifier {
   function verifyTx(
@@ -36,8 +36,8 @@ contract WithdrawVerifier {
             uint[2] c_p,
             uint[2] h,
             uint[2] k,
-            uint[4] input
-        ) returns (bool) {}
+            uint[5] input
+        ) public returns (bool) {}
 }
 contract Manager {
   DepositVerifier dv;
@@ -87,29 +87,8 @@ contract Manager {
     return res_tree;
   }
 
-  function getSha256UInt(uint8[64] input) view public returns (uint hash) {
-     return uint(sha256(input));
-   }
-   function getSha256(uint8[64] input) view public returns (bytes32 hash) {
-     return sha256(input);
-   }
    function getSha256_UInt(uint input1, uint input2) view public returns (uint hash) {
      return uint(sha256(input1, input2));
-   }
-   function getSha256_(uint input1, uint input2) view public returns (bytes32 hash) {
-     return sha256(input1, input2);
-   }
-   function getSha256_8(uint8[32] input1, uint8[32] input2) view public returns (bytes32 hash) {
-     return sha256(input1, input2);
-   }
-   function getSha256_8UInt(uint8[32] input1, uint8[32] input2) view public returns (uint hash) {
-     return uint(sha256(input1, input2));
-   }
-   function getSha256_bytes_(bytes32 input, bytes32 input2) view public returns (bytes32 hash) {
-     return sha256(input, input2);
-   }
-   function getSha256_bytes_UInt(bytes32 input, bytes32 input2) view public returns (uint hash) {
-     return uint(sha256(input, input2));
    }
 
   function getRoot() view public returns (uint root) {
@@ -187,7 +166,7 @@ contract Manager {
       return false;
 
       if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-        public_input
+        [public_input[0], public_input[1], public_input[2], public_input[3], 1]
         ) == false)
       return false;
     if (MT.current + 2 >= max_leaves)
@@ -240,8 +219,8 @@ contract Manager {
     if (commitments[public_input[3]])
       return false;
 
-    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-      public_input
+    if (wv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
+      [public_input[0], public_input[1], public_input[2], public_input[3], 1]
       ) == false)
       return false;
     return add_commitment(public_input[3]);
