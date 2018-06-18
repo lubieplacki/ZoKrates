@@ -22,7 +22,7 @@ def sha256(params):
             witness[witness_output[i]] = witness_output[i+1]
 
     bits = []
-    for i in range(255, -1, -1):
+    for i in range(0, 256):
         bits.append(int(witness["~out_{}".format(i)]))
     return bits
 
