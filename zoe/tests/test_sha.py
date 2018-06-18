@@ -15,6 +15,11 @@ from utils import *
 sha256(zero512)
 bits_to_int(sha256(zero512))
 bits_to_int((sha256(zero512)[::-1]))
+from gen_public_key import *
+gen_keys()
+secret_key, public_key, rsa_secret_key, rsa_public_key = load_keys()
+manager = m
+value = 4
 
 
 testing = """

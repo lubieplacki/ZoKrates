@@ -10,7 +10,7 @@ contract DepositVerifier {
             uint[2] c_p,
             uint[2] h,
             uint[2] k,
-            uint[2] input
+            uint[3] input
         ) returns (bool) {}
 }
 contract TransactionVerifier {
@@ -187,7 +187,7 @@ contract Manager {
       return false;
 
       if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-        [public_input[0], public_input[1], public_input[2], public_input[3], 1]
+        public_input
         ) == false)
       return false;
     if (MT.current + 2 >= max_leaves)
@@ -241,7 +241,7 @@ contract Manager {
       return false;
 
     if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-      [public_input[0], public_input[1], public_input[2], public_input[3], 1]
+      public_input
       ) == false)
       return false;
     return add_commitment(public_input[3]);
