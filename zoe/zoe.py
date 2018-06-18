@@ -78,17 +78,18 @@ def encrypt_msg(public_key, secret, value, rsa_key):
 ## *encode* public_key,value,secret
 ## *send* commitment, value, commitment_proof, encrypted message to contract
 ## contract verifies proof, adds commitment to the tree and saves value
-def deposit(manager, value, public_key, rsa_public_key):
+def deposit(w3, manager, value, public_key, rsa_public_key):
     secret = random_secret()
     print("Creating commitment...")
     commitment = gen_commitment(public_key, secret, value)
     print("Generating zksnark..")
-    proof = gen_commitment_proof(commitment, public_key, secret, value)
+    proof = gen_commitment_proof(commitment, value, secret, public_key)
     print("Encrypting message...")
 
     encrypted_msg = encrypt_msg(public_key, secret, value, rsa_public_key)
 
     print("Depositing the funds")
+
     result = manager.functions.deposit(
         proof['A'],
         proof['A_p'],
@@ -99,10 +100,10 @@ def deposit(manager, value, public_key, rsa_public_key):
         proof["H"],
         proof["K"],
         commitment,
-        encrypted_msg,
+        str(encrypted_msg),
     ).transact({
         "value": value,
-        "from": web3.eth.accounts[0],
+        "from": w3.eth.accounts[0],
         "gas":2 * 10**6,
         "gasPrice":10**10,
     })
@@ -132,7 +133,7 @@ def get_commitments(manager):
 ## *send* transaction_proof, input_invalidator, root, change_commitment, out_commitment
 ## contract checks root, invalidator, proof, adds commitments
 
-def transaction(manager, public_key, secret_key, out_value, out_pk, rsa_public_key_out, rsa_public_key_change, in_value, in_commitment, in_secret):
+def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_public_key_out, rsa_public_key_change, in_value, in_commitment, in_secret):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     list_of_commitments = get_commitments()
@@ -175,7 +176,7 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, rsa_public_k
         encrypted_msg_change,
     ).transact({
         "value": value,
-        "from": web3.eth.accounts[0],
+        "from": w3.eth.accounts[0],
         "gas":2 * 10**6,
         "gasPrice":10**10,
     })
@@ -196,7 +197,7 @@ def transaction(manager, public_key, secret_key, out_value, out_pk, rsa_public_k
 ## gen withdraw_proof
 ## *send* withdraw_proof, input_invalidator, root, change_commitment, out_value
 ## contract checks root, invalidator, proof, adds commitment, send out_value to sender
-def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret, rsa_public_key_change):
+def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret, rsa_public_key_change):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     list_of_commitments = get_commitments()
@@ -232,7 +233,7 @@ def withdraw(manager, public_key, secret_key, out_value, in_value, in_commitment
         encrypted_msg_change,
     ).transact({
         "value": value,
-        "from": web3.eth.accounts[0],
+        "from": w3.eth.accounts[0],
         "gas":2 * 10**6,
         "gasPrice":10**10,
     })

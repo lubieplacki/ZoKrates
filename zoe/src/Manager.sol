@@ -139,7 +139,7 @@ contract Manager {
   ) internal returns (bool res) {
     if (commitments[commitment])
       return false;
-    if (dv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [commitment, value]) == false)
+    if (dv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [commitment, value, 1]) == false)
       return false;
     return add_commitment(commitment);
   }
@@ -186,7 +186,9 @@ contract Manager {
     if (commitments[public_input[3]])
       return false;
 
-    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, public_input) == false)
+      if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
+        [public_input[0], public_input[1], public_input[2], public_input[3], 1]
+        ) == false)
       return false;
     if (MT.current + 2 >= max_leaves)
       return false;
@@ -238,7 +240,9 @@ contract Manager {
     if (commitments[public_input[3]])
       return false;
 
-    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, public_input) == false)
+    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
+      [public_input[0], public_input[1], public_input[2], public_input[3], 1]
+      ) == false)
       return false;
     return add_commitment(public_input[3]);
   }
@@ -255,7 +259,7 @@ contract Manager {
     uint[4] public_input, //invalidator, root, value_out, commitment_change
     string encrypted_msg_change
   ) public returns (bool res) {
-    if (transaction_internal(a, a_p, b, b_p, c, c_p, h, k, public_input)) {
+    if (withdraw_internal(a, a_p, b, b_p, c, c_p, h, k, public_input)) {
       invalidators[public_input[0]] = true;
       commitments[public_input[3]] = true;
       roots[getRoot()] = true;
