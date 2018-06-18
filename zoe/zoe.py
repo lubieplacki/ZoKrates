@@ -108,7 +108,7 @@ def deposit(w3, manager, value, public_key, rsa_public_key):
         "gasPrice":10**10,
     })
     print("Finished.")
-    print(result)
+    return result
     ## *encode* public_key,value,secret
     ## *send* commitment, value, commitment_proof, encrypted message to contract
     ## print result
@@ -241,20 +241,24 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
     print(result)
 
 def available_commitments(manager, secret_key, public_key, rsa_private_key):
-    results = manager.events.TransactionEvent.createFilter({}, { fromBlock: 0, toBlock: 'latest' }).get_all_entries()
+    results = manager.events.TransactionEvent.createFilter(fromBlock= 0, toBlock= 'latest').get_all_entries()
     print(results)
-    commitments = []
-    for result in results:
-        encrypted_msg = results['args']['encrypted_msg']
-        try:
-            decrypted = decrypt(encrypted_msg, rsa_private_key)
-            decryptedObject = ast.literal_eval(decrypted)
-            if (decryptedObject['pk'] == public_key):
-                invalidator = gen_invalidator(secret_key, decryptedObject['secret'])
-                if (manager.checkInvalidator(invalidator) == false):
-                    commitments.append(decryptedObject)
-        except Exception as e:
-            pass
+commitments = []
+for result in results:
+    print(result)
+    encrypted_msg = result['args']['encrypted_msg']
+    print(encrypted_msg)
+    try:
+        decrypted = decrypt(encrypted_msg, rsa_private_key)
+        print(decrypted)
+        decryptedObject = ast.literal_eval(decrypted)
+        if (decryptedObject['pk'] == public_key):
+            invalidator = gen_invalidator(secret_key, decryptedObject['secret'])
+            print(invalidator)
+            if (manager.checkInvalidator(invalidator) == false):
+                commitments.append(decryptedObject)
+    except Exception as e:
+        pass
     print(commitments)
     return commitments
 

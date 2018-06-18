@@ -8,7 +8,7 @@ def gen_invalidator_bits(private_key, secret):
     return hash_bits
 
 def gen_invalidator(private_key, secret):
-    return bits_to_int(gen_invalidator(private_key, secret))
+    return bits_to_int(gen_invalidator_bits(private_key, secret))
 
 # oops not used
 def gen_invalidator_proof(invalidator, private_key, secret):
