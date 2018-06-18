@@ -3,7 +3,7 @@ from subprocess import call
 def bits_to_int(bits):
     res = 0
     for i in range(0, len(bits)):
-        res = res * 2 + bits[len(bits) - 1 - i]
+        res = res * 2 + bits[i]
     return res
 
 def sha256(params):
@@ -43,7 +43,7 @@ def int_to_bits(x, num_bits):
     for i in range(0, num_bits):
         bits.append(x % 2)
         x = x // 2
-    return bits
+    return bits[::-1]
 
 import ast
 def raw_to_proof(proof_raw):
