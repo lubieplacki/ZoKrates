@@ -2,20 +2,22 @@ from deploy_contracts import *
 w3 = Web3(EthereumTesterProvider())
 m = deploy_manager(w3)
 zero512 = [0 for x in range(0,512)]
-zero64 = [0 for x in range(0,64)]
 zeroU = 0
-zero32 = [0 for x in range(0,32)]
-zeroB = w3.toBytes(hexstr='0x0000000000000000000000000000000000000000000000000000000000000000')
 m.functions.getSha256_UInt(zeroU, zeroU).call()
 from utils import *
 sha256(zero512)
 bits_to_int(sha256(zero512))
 bits_to_int((sha256(zero512)[::-1]))
 from gen_public_key import *
-gen_keys()
+seed = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+gen_keys(seed)
 secret_key, public_key, rsa_private_key, rsa_public_key = load_keys()
 manager = m
 value = 4
+m.functions.getCommitmentsTree().call()
+from zoe import *
+deposit(m, value, public_key, rsa_public_key)
+m.functions.getCommitmentsTree().call()
 
 
 testing = """

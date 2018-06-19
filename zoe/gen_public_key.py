@@ -5,6 +5,9 @@ from Crypto.PublicKey import RSA
 
 def gen_keys():
     secret_key = input("Please provide 32-character secret seed:\n")
+    return gen_keys(secret_key)
+
+def gen_keys(secret_key):
 
     secret_key_bits = string_to_bits(secret_key, 32)
 
