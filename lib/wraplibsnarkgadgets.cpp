@@ -96,7 +96,7 @@ std::string array_to_json(protoboard<FieldT> pb)
 {
     std::stringstream ss;
     r1cs_variable_assignment<FieldT> values = pb.full_variable_assignment();
-    ss << "\n{\"variables\":[";
+    ss << "{\"variables\":[";
 
     ss << 1 << ","; // the variable zero to the one constant
 
@@ -106,7 +106,7 @@ std::string array_to_json(protoboard<FieldT> pb)
         if (i <  values.size() - 1) { ss << ",";}
     }
 
-    ss << "]}\n";
+    ss << "]}";
     ss.rdbuf()->pubseekpos(0, std::ios_base::out);
 
     return(ss.str());
