@@ -1,6 +1,8 @@
 cd proofs/commitment
 python commitment.py > commitment.code
 ../../../target/release/zokrates compile --gadgets -i 'commitment.code'
+../../../target/release/zokrates setup
+../../../target/release/zokrates export-verifier
 cd ../invalidator
 python invalidator.py > invalidator.code
 ../../../target/release/zokrates compile --gadgets -i 'invalidator.code'
@@ -16,7 +18,11 @@ echo 6 | python root.py > root.code
 cd ../transaction
 echo 6 | python transaction.py > transaction.code
 ../../../target/release/zokrates compile --gadgets -i 'transaction.code'
+../../../target/release/zokrates setup
+../../../target/release/zokrates export-verifier
 cd ../withdraw
 echo 6 | python withdraw.py > withdraw.code
 ../../../target/release/zokrates compile --gadgets -i 'withdraw.code'
+../../../target/release/zokrates setup
+../../../target/release/zokrates export-verifier
 cd ../../

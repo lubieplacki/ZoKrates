@@ -177,11 +177,7 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
         change_commitment],
         str(encrypted_msg_out),
         str(encrypted_msg_change),
-    ).transact({
-        "from": w3.eth.accounts[0],
-        "gas":2 * 10**6,
-        "gasPrice":10**10,
-    })
+    ).transact()
     print("Finished.")
     print(result)
 
@@ -202,9 +198,9 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
 def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret, rsa_public_key_change):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
-    #list_of_commitments = get_commitments()
-    #(root, left_path, right_path) = gen_root(list_of_commitments, in_commitment, tree_depth)
-    commitment_tree = manager.functions.getCommitmentTree().call()
+        #list_of_commitments = get_commitments()
+        #(root, left_path, right_path) = gen_root(list_of_commitments, in_commitment, tree_depth)
+    commitment_tree = manager.functions.getCommitmentsTree().call()
     (root, left_path, right_path) = gen_root_from_tree(commitment_tree, in_commitment)
 
     change_value = in_value - out_value
@@ -249,12 +245,9 @@ def available_commitments(manager, secret_key, public_key, rsa_private_key):
     print(results)
     commitments = []
     for result in results:
-        print(result)
         encrypted_msg = result['args']['encrypted_msg']
-        print(encrypted_msg)
         try:
             decrypted = decrypt(encrypted_msg, rsa_private_key)
-            print(decrypted)
             decryptedObject = ast.literal_eval(decrypted)
             if (decryptedObject['pk'] == public_key):
                 invalidator = gen_invalidator(secret_key, decryptedObject['secret'])

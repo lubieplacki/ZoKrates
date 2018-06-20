@@ -1,3 +1,4 @@
+#source ~/virtualenvs/venv/bin/activate
 from deploy_contracts import *
 w3 = Web3(EthereumTesterProvider())
 manager = deploy_manager(w3)
@@ -21,7 +22,13 @@ deposit(w3, manager, 105, public_key, rsa_public_key)
 manager.functions.getCommitmentsTree().call()
 commitments = available_commitments(manager, secret_key, public_key, rsa_private_key)
 
-transaction(w3, manager, public_key, secret_key, 5, out_pk, rsa_public_key_out, rsa_public_key, commitments[1]['value'], commitments[1]['commitment'], commitments[1]['secret'])
+in_secret = commitments[1]['secret']
+in_value = commitments[1]['value']
+in_commitment = commitments[1]['commitment']
+rsa_public_key_change = rsa_public_key
+public_key_change = public_key
+out_value = 5
+result = transaction(w3, manager, public_key, secret_key, 5, out_pk, rsa_public_key_out, rsa_public_key, in_value, in_commitment, in_secret)
 available_commitments(manager, secret_key, public_key, rsa_private_key)
 
 transaction(w3, manager, public_key, secret_key, 5, out_pk, rsa_public_key_out, rsa_public_key, commitments[1]['value'], commitments[1]['commitment'], commitments[1]['secret'])
