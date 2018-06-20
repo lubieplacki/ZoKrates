@@ -16,9 +16,9 @@ manager = m
 value = 4
 m.functions.getCommitmentsTree().call()
 from zoe import *
-deposit(m, value, public_key, rsa_public_key)
+deposit(w3, m, value, public_key, rsa_public_key)
 m.functions.getCommitmentsTree().call()
-
+deposit(w3, m, value+1, public_key, rsa_public_key)
 
 testing = """
  function getSha256UInt(uint8[64] input) view public returns (uint hash) {

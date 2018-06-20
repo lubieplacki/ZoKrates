@@ -29,3 +29,20 @@ def gen_root(commitments, in_commitment, TREE_DEPTH):
         right_path.append(tree[i * 2 + 1])
         i = i // 2
     return (tree[1], left_path, right_path)
+
+def gen_root_from_tree(tree, in_commitment):
+    x = 0
+    for i in range(0, len(tree)):
+        x = i
+        if tree[i] == in_commitment:
+            break
+    if x == len(tree):
+        return (0, [], [])
+    i = x // 2
+    left_path = []
+    right_path = []
+    while i > 0:
+        left_path.append(tree[i * 2])
+        right_path.append(tree[i * 2 + 1])
+        i = i // 2
+    return (tree[1], left_path, right_path)
