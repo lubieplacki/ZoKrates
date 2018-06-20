@@ -30,10 +30,12 @@ def gen_transaction_proof(input_invalidator, root, out_commitment, change_commit
     input_public_key_bits + left_path_bits + right_path_bits + change_value_bits + \
     change_id_bits + change_public_key_bits + out_value_bits + out_id_bits + out_public_key_bits
     secret_input = " ".join([str(x) for x in secret_input])
+    print("Computing the witness...")
     call("../../../target/release/zokrates compute-witness -a {} {} {} {} {} > tmp".format(
     input_invalidator, root, out_commitment, change_commitment, secret_input
     ),
     shell=True, cwd="proofs/transaction")
+    print("Computing the proof...")
     call("../../../target/release/zokrates generate-proof > transaction.proof", shell=True, cwd="proofs/transaction")
     with open('proofs/transaction/transaction.proof', 'r') as proof_file:
         proof_raw = proof_file.read()

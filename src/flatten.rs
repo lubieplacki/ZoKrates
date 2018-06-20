@@ -93,7 +93,7 @@ impl Flattener {
                         box FlatExpression::Mult(box FlatExpression::Number(T::from(2)), box FlatExpression::Identifier(rhs_name.to_string())),
                     ),
                 ));
-                for i in 0..self.bits - 2 {
+                for i in 0..self.bits {
                     let new_name = format!("{}{}{}", &subtraction_result, BINARY_SEPARATOR, i);
                     statements_flattened.push(FlatStatement::Definition(
                         new_name.to_string(),
@@ -281,9 +281,9 @@ impl Flattener {
                             );
                         },
                         FlatStatement::Compiler(var, rhs) => {
-                            let new_rhs = rhs.apply_substitution(&replacement_map);
                             let new_var: String = format!("{}{}", prefix, var.clone());
                             replacement_map.insert(var, new_var.clone());
+                            let new_rhs = rhs.apply_substitution(&replacement_map);
                             statements_flattened.push(FlatStatement::Compiler(new_var, new_rhs));
                         },
                         FlatStatement::Condition(lhs, rhs) => {
