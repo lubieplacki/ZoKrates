@@ -76,27 +76,6 @@ contract Manager {
   function checkInvalidator(uint invalidator) view public returns (bool exists) {
     return invalidators[invalidator];
   }
-  function checkRoot(uint root) view public returns (bool exists) {
-    return roots[root];
-  }
-  function checkCommitment(uint commit) view public returns (bool exists) {
-    return commitments[commit];
-  }
-  function checkSomething() view public returns (bool exists) {
-    return (MT.current + 2 >= max_leaves);
-  }
-  function onlyVerify(uint[2] a,
-  uint[2] a_p,
-  uint[2][2] b,
-  uint[2] b_p,
-  uint[2] c,
-  uint[2] c_p,
-  uint[2] h,
-  uint[2] k,
-  uint[5] public_input) view public returns (bool ok) {
-    return tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, public_input);
-  }
-
   function getCommitmentsTree() view public returns (uint[tree_size] res_tree) {
     uint i;
     for (i = 0; i < max_leaves; i++)
@@ -107,11 +86,9 @@ contract Manager {
 
     return res_tree;
   }
-
    function getSha256_UInt(uint input1, uint input2) view public returns (uint hash) {
      return uint(sha256(input1, input2));
    }
-
   function getRoot() view public returns (uint root) {
     return getCommitmentsTree()[1];
   }
@@ -121,7 +98,6 @@ contract Manager {
       return false;
     MT.leaves[MT.current] = commitment;
     MT.current++;
-
     return true;
   }
 
