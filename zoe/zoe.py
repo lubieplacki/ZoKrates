@@ -138,7 +138,7 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     #list_of_commitments = get_commitments(manager)
-    commitment_tree = manager.functions.getCommitmentTree().call()
+    commitment_tree = manager.functions.getCommitmentsTree().call()
     (root, left_path, right_path) = gen_root_from_tree(commitment_tree, in_commitment)
     #(root, left_path, right_path) = gen_root(list_of_commitments, in_commitment, tree_depth)
 
@@ -171,14 +171,13 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
         proof["C_p"],
         proof["H"],
         proof["K"],
-        [invalidator,
+        [in_invalidator,
         root,
-        commitment_out,
-        commitment_change],
-        encrypted_msg_out,
-        encrypted_msg_change,
+        out_commitment,
+        change_commitment],
+        str(encrypted_msg_out),
+        str(encrypted_msg_change),
     ).transact({
-        "value": value,
         "from": w3.eth.accounts[0],
         "gas":2 * 10**6,
         "gasPrice":10**10,
@@ -231,13 +230,13 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
         proof["C_p"],
         proof["H"],
         proof["K"],
-        [invalidator,
+        [in_invalidator,
         root,
-        value_out,
-        commitment_change],
-        encrypted_msg_change,
+        out_value,
+        change_commitment],
+        str(encrypted_msg_change),
     ).transact({
-        "value": value,
+        "value": 0,
         "from": w3.eth.accounts[0],
         "gas":2 * 10**6,
         "gasPrice":10**10,

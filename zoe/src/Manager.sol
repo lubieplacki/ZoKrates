@@ -47,6 +47,7 @@ contract Manager {
   mapping (uint => bool) public commitments;
   mapping (uint => bool) public roots;
   event TransactionEvent(string encrypted_msg);
+  event Error(string error);
   event RegisterEvent(uint pk, string enc_pk, address from);
   uint constant max_leaves = 64;
   uint constant tree_size = 128;
@@ -74,6 +75,26 @@ contract Manager {
   }
   function checkInvalidator(uint invalidator) view public returns (bool exists) {
     return invalidators[invalidator];
+  }
+  function checkRoot(uint root) view public returns (bool exists) {
+    return roots[root];
+  }
+  function checkCommitment(uint commit) view public returns (bool exists) {
+    return commitments[commit];
+  }
+  function checkSomething() view public returns (bool exists) {
+    return (MT.current + 2 >= max_leaves);
+  }
+  function onlyVerify(uint[2] a,
+  uint[2] a_p,
+  uint[2][2] b,
+  uint[2] b_p,
+  uint[2] c,
+  uint[2] c_p,
+  uint[2] h,
+  uint[2] k,
+  uint[5] public_input) view public returns (bool ok) {
+    return tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, public_input);
   }
 
   function getCommitmentsTree() view public returns (uint[tree_size] res_tree) {
@@ -156,23 +177,40 @@ contract Manager {
     uint[2] k,
     uint[4] public_input
   ) internal returns (bool res) {
-    if (invalidators[public_input[0]])
+    if (invalidators[public_input[0]]) {
+      emit Error("Invalidator");
       return false;
-    if (roots[public_input[1]] == false)
-        return false;
-    if (commitments[public_input[2]])
+    }
+    if (roots[public_input[1]] == false) {
+      emit Error("Root");
       return false;
-    if (commitments[public_input[3]])
+    }
+    if (commitments[public_input[2]]) {
+      emit Error("commit1");
       return false;
+    }
+    if (commitments[public_input[3]]) {
+      emit Error("Commit2");
+      return false;
+    }
 
-      if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-        [public_input[0], public_input[1], public_input[2], public_input[3], 1]
-        ) == false)
+    if (tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [public_input[0], public_input[1], public_input[2], public_input[3], 1]) == false) {
+      emit Error("Transact");
       return false;
-    if (MT.current + 2 >= max_leaves)
+    }
+    if (MT.current + 2 >= max_leaves) {
+      emit Error("size");
       return false;
-    add_commitment(public_input[2]);
-    add_commitment(public_input[3]);
+    }
+    if (add_commitment(public_input[2]) == false) {
+      emit Error("add_");
+      return false;
+    }
+    if (add_commitment(public_input[3]) == false) {
+      emit Error("add_2");
+      return false;
+    }
+    emit Error("ok");
     return true;
   }
 
@@ -198,6 +236,7 @@ contract Manager {
       emit TransactionEvent(encrypted_msg_change);
       return true;
     } else {
+      emit Error("error");
       return false;
     }
   }
