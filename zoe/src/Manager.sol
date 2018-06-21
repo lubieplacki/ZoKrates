@@ -117,6 +117,7 @@ contract Manager {
     require(!commitments[commitment], "Commitment already used!");
     require(dv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [commitment, value / weiPerEth, 1]), "Proof is wrong!");
     require(add_commitment(commitment), "Couldn't add the commitment!");
+    return true;
   }
   function deposit(
       uint[2] a,
