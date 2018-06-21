@@ -115,7 +115,7 @@ contract Manager {
     uint value
   ) internal returns (bool res) {
     require(!commitments[commitment], "Commitment already used!");
-    require(dv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [commitment, value / weiPerEth, 1]), "Proof is wrong!");
+    require(dv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [commitment, value / weiPerEth, 1]), "Deposit proof is wrong!");
     require(add_commitment(commitment), "Couldn't add the commitment!");
     return true;
   }
@@ -155,7 +155,7 @@ contract Manager {
     require(!commitments[public_input[3]], "Change commitment already used!");
 
     require(tv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-      [public_input[0], public_input[1], public_input[2], public_input[3], 1]), "Proof is wrong!");
+      [public_input[0], public_input[1], public_input[2], public_input[3], 1]), "Transaction proof is wrong!");
     require(add_commitment(public_input[2]), "Couldn't add out commitment!");
     require(add_commitment(public_input[3]), "Couldn't add change commitment!");
     return true;
@@ -200,7 +200,7 @@ contract Manager {
 
     require(wv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
       [public_input[0], public_input[1], public_input[2] / weiPerEth, public_input[3], 1]
-      ), "Proof is wrong!");
+      ), "Withdraw proof is wrong!");
     require(add_commitment(public_input[3]), "Couldn't add change commitment!");
     return true;
   }
