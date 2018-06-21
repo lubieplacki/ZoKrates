@@ -33,7 +33,7 @@ def gen_withdraw_proof(input_invalidator, root, change_commitment,
     ),
     shell=True, cwd="proofs/withdraw")
     call("../../../target/release/zokrates generate-proof > withdraw.proof", shell=True, cwd="proofs/withdraw")
-    with open('proofs/transaction/withdraw.proof', 'r') as proof_file:
+    with open('proofs/withdraw/withdraw.proof', 'r') as proof_file:
         proof_raw = proof_file.read()
 
     proof = raw_to_proof(proof_raw)
