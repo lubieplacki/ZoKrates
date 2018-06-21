@@ -23,7 +23,7 @@ def gen_withdraw_proof(input_invalidator, root, change_commitment,
 
     secret_input = [input_value, input_id, input_private_key, input_public_key,
     input_commitment] + left_path + right_path + [change_value, change_id, change_public_key,
-    out_value, out_id, out_public_key] + input_value_bits + input_id_bits + input_private_key_bits + \
+    out_value] + input_value_bits + input_id_bits + input_private_key_bits + \
     input_public_key_bits + left_path_bits + right_path_bits + change_value_bits + \
     change_id_bits + change_public_key_bits
 

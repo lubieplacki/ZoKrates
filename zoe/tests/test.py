@@ -46,4 +46,11 @@ available_commitments(manager, secret_key, public_key, rsa_private_key)
 w3.eth.getBalance(w3.eth.accounts[0])
 w3.eth.getBalance(manager.address)
 
+
+commitsSecondGuy = available_commitments(manager, out_sk, out_pk, rsa_private_key_out)
+w3.eth.getBalance(w3.eth.accounts[1])
+w3.eth.defaultAccount = w3.eth.accounts[1]
+withdraw(w3, manager, out_pk, out_sk, 3, 5, commitsSecondGuy[0]['commitment'], commitsSecondGuy[0]['secret'], rsa_private_key_out)
+w3.eth.getBalance(w3.eth.accounts[1])
+w3.eth.getBalance(manager.address)
 available_commitments(manager, out_sk, out_pk, rsa_private_key_out)
