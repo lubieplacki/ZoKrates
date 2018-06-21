@@ -14,6 +14,7 @@ from Crypto.Cipher import PKCS1_OAEP
 
 maxInt = 2**32
 contract_address = 0 #0x000
+weiPerEth = 1000000000000000000
 
 def init_manager(w3, manager_address):
     #w3 = Web3(EthereumTesterProvider())
@@ -103,7 +104,7 @@ def deposit(w3, manager, value, public_key, rsa_public_key):
         commitment,
         str(encrypted_msg),
     ).transact({
-        "value": value,
+        "value": value * weiPerEth,
         "from": w3.eth.accounts[0],
         "gas":2 * 10**6,
         "gasPrice":10**10,
@@ -231,14 +232,9 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
         out_value,
         change_commitment],
         str(encrypted_msg_change),
-    ).transact({
-        "value": 0,
-        "from": w3.eth.accounts[0],
-        "gas":2 * 10**6,
-        "gasPrice":10**10,
-    })
+    ).transact()
     print("Finished.")
-    print(result)
+    return result
 
 def available_commitments(manager, secret_key, public_key, rsa_private_key):
     results = manager.events.TransactionEvent.createFilter(fromBlock= 0, toBlock= 'latest').get_all_entries()
