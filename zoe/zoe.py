@@ -215,7 +215,7 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
         out_value)
 
     print("Encrypting message...")
-    encrypted_msg_change = encrypt_msg(public_key, change_secret, change_value, rsa_public_key_change)
+    encrypted_msg_change = encrypt_msg(change_commitment, public_key, change_secret, change_value, rsa_public_key_change)
 
     print("Transfering the funds...")
     result = manager.functions.transaction(
