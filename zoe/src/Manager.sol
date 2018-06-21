@@ -49,55 +49,80 @@ contract Manager {
   event TransactionEvent(string encrypted_msg);
   event Error(string error);
   event RegisterEvent(uint pk, string enc_pk, address from);
-  uint constant max_leaves = 64;
-  uint constant tree_size = 128;
+  uint constant depth = 20;
+  uint constant max_leaves = 1048576;
+  uint constant tree_size = 2097152;
   uint constant weiPerEth = 1000000000000000000;
   struct Mtree {
     uint current;
-    uint[max_leaves] leaves;
+    uint[tree_size] tree;
   }
   Mtree public MT;
+  function update_tree() internal returns (bool res) {
+    uint i = MT.current + max_leaves;
+    uint zero_hash = 0;
+    while (i > 1) {
+        if (i % 2 == 1)
+            MT.tree[i/2] = uint(sha256(MT.tree[i-1], MT.tree[i]));
+        else
+            MT.tree[i/2] = uint(sha256(MT.tree[i], zero_hash));
+        zero_hash = uint(sha256(zero_hash, zero_hash));
+        i /= 2;
+    }
+    return true;
+  }
 
   function Manager(address _dv, address _tv, address _wv) public {
     dv = DepositVerifier(_dv);
     tv = TransactionVerifier(_tv);
     wv = WithdrawVerifier(_wv);
     MT.current = 0;
-    uint i;
-    for (i = 0; i < max_leaves; i++)
-      MT.leaves[i] = 0x0;
   }
   function register(uint pk, string enc_pk) public returns (bool res) {
     emit RegisterEvent(pk, enc_pk, msg.sender);
     return true;
   }
-  function getCommitments() view public returns (uint[max_leaves] res_commitments) {
-    return MT.leaves;
-  }
-  function checkInvalidator(uint invalidator) view public returns (bool exists) {
+  function check_invalidator(uint invalidator) view public returns (bool exists) {
     return invalidators[invalidator];
   }
-  function getCommitmentsTree() view public returns (uint[tree_size] res_tree) {
-    uint i;
-    for (i = 0; i < max_leaves; i++)
-      res_tree[max_leaves + i] = MT.leaves[i];
-
-    for (i = max_leaves - 1; i > 0; i--)
-      res_tree[i] = uint(sha256(res_tree[2 * i], res_tree[2 * i + 1]));
-
-    return res_tree;
+  function get_merkle_proof(uint i) view public returns (uint root, uint[depth] left_path, uint[depth] right_path) {
+    i += max_leaves;
+    uint curr = MT.current + max_leaves - 1;
+    uint d = 0;
+    uint zero_hash = 0;
+    while (i > 1) {
+        if (i % 2 == 1) {
+            left_path[d] = MT.tree[i-1];
+            right_path[d] = MT.tree[i];
+        } else if (curr != i) {
+            left_path[d] = MT.tree[i];
+            right_path[d] = MT.tree[i+1];
+        } else {
+            left_path[d] = MT.tree[i];
+            right_path[d] = zero_hash;
+        }
+        d++;
+        zero_hash = uint(sha256(zero_hash, zero_hash));
+        i /= 2;
+        curr /= 2;
+    }
+    return (MT.tree[1], left_path, right_path);
   }
    function getSha256_UInt(uint input1, uint input2) view public returns (uint hash) {
      return uint(sha256(input1, input2));
-   }
-  function getRoot() view public returns (uint root) {
-    return getCommitmentsTree()[1];
   }
 
+  function get_root() view public returns (uint root) {
+    return MT.tree[1];
+  }
+  function get_size() view public returns (uint size) {
+    return MT.current;
+  }
   function add_commitment(uint commitment) internal returns (bool res) {
     if (MT.current == max_leaves)
       return false;
-    MT.leaves[MT.current] = commitment;
+    MT.tree[max_leaves + MT.current] = commitment;
+    update_tree();
     MT.current++;
     return true;
   }
@@ -133,7 +158,7 @@ contract Manager {
     ) public payable returns (bool res) {
     require(deposit_internal(a, a_p, b, b_p, c, c_p, h, k, commitment, msg.value), "Deposit is incorrect!");
     commitments[commitment] = true;
-    roots[getRoot()] = true;
+    roots[get_root()] = true;
     emit TransactionEvent(encrypted_msg);
     return true;
   }
@@ -178,7 +203,7 @@ contract Manager {
     invalidators[public_input[0]] = true;
     commitments[public_input[2]] = true;
     commitments[public_input[3]] = true;
-    roots[getRoot()] = true;
+    roots[get_root()] = true;
     emit TransactionEvent(encrypted_msg_out);
     emit TransactionEvent(encrypted_msg_change);
     return true;
@@ -220,7 +245,7 @@ contract Manager {
     require(withdraw_internal(a, a_p, b, b_p, c, c_p, h, k, public_input), "Withdraw is incorrect!");
     invalidators[public_input[0]] = true;
     commitments[public_input[2]] = true;
-    roots[getRoot()] = true;
+    roots[get_root()] = true;
     msg.sender.transfer(public_input[3]);
     emit TransactionEvent(encrypted_msg_change);
     return true;

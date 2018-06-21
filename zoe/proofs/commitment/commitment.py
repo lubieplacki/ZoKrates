@@ -30,8 +30,5 @@ print "  {} = sha256libsnark({}, {}, {}, {})".format(
 print " "
 
 print "  // Check if commitment is correctly computed"
-print "  hash = 0"
-for i in range(255, -1, -1):
-    print "  hash = hash * 2 + hashBit{}".format(i)
-print "  hash == commitment"
+print "  1 == bitCheck256(commitment, {})".format(bits("hash", 256))
 print "  return 1"

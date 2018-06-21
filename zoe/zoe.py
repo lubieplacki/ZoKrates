@@ -62,9 +62,10 @@ def decrypt(msg, rsa_key):
     decryptor = PKCS1_OAEP.new(rsa_key)
     return decryptor.decrypt(ast.literal_eval(str(msg))).decode("utf-8")
 
-def encrypt_msg(commitment, public_key, secret, value, rsa_key):
-    return encrypt("{" + "\'commitment\':{}, \'pk\':{}, \'secret\':{}, \'value\':{}".format(
+def encrypt_msg(commitment, id_in_tree, public_key, secret, value, rsa_key):
+    return encrypt("{" + "\'commitment\':{}, \'id_in_tree\':{}, \'pk\':{}, \'secret\':{}, \'value\':{}".format(
         commitment,
+        id_in_tree,
         public_key,
         secret,
         value) + "}",
@@ -86,9 +87,10 @@ def deposit(w3, manager, value, public_key, rsa_public_key):
     commitment = gen_commitment(public_key, secret, value)
     print("Generating zksnark..")
     proof = gen_commitment_proof(commitment, value, secret, public_key)
+    size = manager.functions.get_size().call()
     print("Encrypting message...")
 
-    encrypted_msg = encrypt_msg(commitment, public_key, secret, value, rsa_public_key)
+    encrypted_msg = encrypt_msg(commitment, size, public_key, secret, value, rsa_public_key)
 
     print("Depositing the funds")
 
@@ -135,13 +137,11 @@ def get_commitments(manager):
 ## *send* transaction_proof, input_invalidator, root, change_commitment, out_commitment
 ## contract checks root, invalidator, proof, adds commitments
 
-def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_public_key_out, rsa_public_key_change, in_value, in_commitment, in_secret):
+def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_public_key_out, rsa_public_key_change, in_value, in_commitment, in_secret, in_id_in_tree):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
-    #list_of_commitments = get_commitments(manager)
-    commitment_tree = manager.functions.getCommitmentsTree().call()
-    (root, left_path, right_path) = gen_root_from_tree(commitment_tree, in_commitment)
-    #(root, left_path, right_path) = gen_root(list_of_commitments, in_commitment, tree_depth)
+    (root, left_path, right_path) = manager.functions.get_merkle_proof(in_id_in_tree).call()
+    size = manager.functions.get_size().call()
 
     change_value = in_value - out_value
     change_secret = random_secret()
@@ -157,10 +157,10 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
         out_value, out_secret, out_pk)
 
     print("Encrypting message...")
-    encrypted_msg_out = encrypt_msg(out_commitment, out_pk, out_secret, out_value, rsa_public_key_out)
+    encrypted_msg_out = encrypt_msg(out_commitment, size, out_pk, out_secret, out_value, rsa_public_key_out)
 
     print("Encrypting 2nd message...")
-    encrypted_msg_change = encrypt_msg(change_commitment, public_key, change_secret, change_value, rsa_public_key_change)
+    encrypted_msg_change = encrypt_msg(change_commitment, size + 1, public_key, change_secret, change_value, rsa_public_key_change)
 
     print("Transfering the funds...")
     result = manager.functions.transaction(
@@ -199,10 +199,8 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
 def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret, rsa_public_key_change):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
-        #list_of_commitments = get_commitments()
-        #(root, left_path, right_path) = gen_root(list_of_commitments, in_commitment, tree_depth)
-    commitment_tree = manager.functions.getCommitmentsTree().call()
-    (root, left_path, right_path) = gen_root_from_tree(commitment_tree, in_commitment)
+    (root, left_path, right_path) = manager.functions.get_merkle_proof(in_id_in_tree).call()
+    size = manager.functions.get_size().call()
 
     change_value = in_value - out_value
     change_secret = random_secret()
@@ -215,7 +213,7 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
         out_value)
 
     print("Encrypting message...")
-    encrypted_msg_change = encrypt_msg(change_commitment, public_key, change_secret, change_value, rsa_public_key_change)
+    encrypted_msg_change = encrypt_msg(change_commitment, size, public_key, change_secret, change_value, rsa_public_key_change)
 
     print("Transfering the funds...")
     result = manager.functions.withdraw(
