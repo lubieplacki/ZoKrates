@@ -196,12 +196,12 @@ contract Manager {
   ) internal returns (bool res) {
     require(!invalidators[public_input[0]], "Invalidator already used!");
     require(roots[public_input[1]], "Root never appeared!");
-    require(!commitments[public_input[3]], "Change commitment already used!");
+    require(!commitments[public_input[2]], "Change commitment already used!");
 
     require(wv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-      [public_input[0], public_input[1], public_input[2] / weiPerEth, public_input[3], 1]
+      [public_input[0], public_input[1], public_input[2], public_input[3] / weiPerEth, 1]
       ), "Withdraw proof is wrong!");
-    require(add_commitment(public_input[3]), "Couldn't add change commitment!");
+    require(add_commitment(public_input[2]), "Couldn't add change commitment!");
     return true;
   }
 
@@ -219,9 +219,9 @@ contract Manager {
   ) public returns (bool res) {
     require(withdraw_internal(a, a_p, b, b_p, c, c_p, h, k, public_input), "Withdraw is incorrect!");
     invalidators[public_input[0]] = true;
-    commitments[public_input[3]] = true;
+    commitments[public_input[2]] = true;
     roots[getRoot()] = true;
-    msg.sender.transfer(public_input[2]);
+    msg.sender.transfer(public_input[3]);
     emit TransactionEvent(encrypted_msg_change);
     return true;
   }

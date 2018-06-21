@@ -29,9 +29,6 @@ def gen_withdraw_proof(input_invalidator, root, change_commitment,
 
     secret_input = " ".join([str(x) for x in secret_input])
     print("Computing the witness...")
-    print("../../../target/release/zokrates compute-witness -a {} {} {} {} > tmp".format(
-    input_invalidator, root, change_commitment, secret_input
-    ))
     call("../../../target/release/zokrates compute-witness -a {} {} {} {} > tmp".format(
     input_invalidator, root, change_commitment, secret_input
     ),

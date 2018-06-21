@@ -229,8 +229,8 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
         proof["K"],
         [in_invalidator,
         root,
-        out_value * weiPerEth,
-        change_commitment],
+        change_commitment,
+        out_value * weiPerEth],
         str(encrypted_msg_change),
     ).transact()
     print("Finished.")
