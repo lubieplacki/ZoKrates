@@ -31,7 +31,7 @@ out_value = 5
 result = transaction(w3, manager, public_key, secret_key, 5, out_pk, rsa_public_key_out, rsa_public_key, in_value, in_commitment, in_secret)
 available_commitments(manager, secret_key, public_key, rsa_private_key)
 
-transaction(w3, manager, public_key, secret_key, 5, out_pk, rsa_public_key_out, rsa_public_key, commitments[1]['value'], commitments[1]['commitment'], commitments[1]['secret'])
+transaction(w3, manager, public_key, secret_key, 1, out_pk, rsa_public_key_out, rsa_public_key, commitments[0]['value'], commitments[0]['commitment'], commitments[0]['secret'])
 available_commitments(manager, secret_key, public_key, rsa_private_key)
 
 available_commitments(manager, out_sk, out_pk, rsa_private_key_out)

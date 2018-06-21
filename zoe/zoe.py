@@ -242,7 +242,6 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
 
 def available_commitments(manager, secret_key, public_key, rsa_private_key):
     results = manager.events.TransactionEvent.createFilter(fromBlock= 0, toBlock= 'latest').get_all_entries()
-    print(results)
     commitments = []
     for result in results:
         encrypted_msg = result['args']['encrypted_msg']
@@ -255,7 +254,6 @@ def available_commitments(manager, secret_key, public_key, rsa_private_key):
                     commitments.append(decryptedObject)
         except Exception as e:
             pass
-    print(commitments)
     return commitments
 
 def available_addresses(manager):
