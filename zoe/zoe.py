@@ -63,7 +63,7 @@ def decrypt(msg, rsa_key):
     return decryptor.decrypt(ast.literal_eval(str(msg))).decode("utf-8")
 
 def encrypt_msg(commitment, id_in_tree, public_key, secret, value, rsa_key):
-    return encrypt("{" + "\'commitment\':{}, \'id_in_tree\':{}, \'pk\':{}, \'secret\':{}, \'value\':{}".format(
+    return encrypt("{" + "\'commit\':{}, \'id\':{}, \'pk\':{}, \'s\':{}, \'v\':{}".format(
         commitment,
         id_in_tree,
         public_key,
@@ -108,7 +108,7 @@ def deposit(w3, manager, value, public_key, rsa_public_key):
     ).transact({
         "value": value * weiPerEth,
         "from": w3.eth.accounts[0],
-        "gas":2 * 10**6,
+        "gas":3 * 10**6,
         "gasPrice":10**10,
     })
     print("Finished.")
@@ -196,7 +196,7 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
 ## gen withdraw_proof
 ## *send* withdraw_proof, input_invalidator, root, change_commitment, out_value
 ## contract checks root, invalidator, proof, adds commitment, send out_value to sender
-def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret, rsa_public_key_change):
+def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret, rsa_public_key_change, in_id_in_tree):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     (root, left_path, right_path) = manager.functions.get_merkle_proof(in_id_in_tree).call()
@@ -236,18 +236,18 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
 
 def available_commitments(manager, secret_key, public_key, rsa_private_key):
     results = manager.events.TransactionEvent.createFilter(fromBlock= 0, toBlock= 'latest').get_all_entries()
-    commitments = []
-    for result in results:
-        encrypted_msg = result['args']['encrypted_msg']
-        try:
-            decrypted = decrypt(encrypted_msg, rsa_private_key)
-            decryptedObject = ast.literal_eval(decrypted)
-            if (decryptedObject['pk'] == public_key):
-                invalidator = gen_invalidator(secret_key, decryptedObject['secret'])
-                if (manager.functions.checkInvalidator(invalidator).call() == False):
-                    commitments.append(decryptedObject)
-        except Exception as e:
-            pass
+commitments = []
+for result in results:
+    encrypted_msg = result['args']['encrypted_msg']
+    try:
+        decrypted = decrypt(encrypted_msg, rsa_private_key)
+        decrypted_object = ast.literal_eval(decrypted)
+        if (decrypted_object['pk'] == public_key):
+            invalidator = gen_invalidator(secret_key, decrypted_object['s'])
+            if (manager.functions.check_invalidator(invalidator).call() == False):
+                commitments.append(decrypted_object)
+    except Exception as e:
+        pass
     return commitments
 
 def available_addresses(manager):

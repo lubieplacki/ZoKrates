@@ -11,14 +11,14 @@ cd ../sha256
 python sha256.py > sha256.code
 ../../../target/release/zokrates compile --gadgets -i 'sha256.code'
 cd ../root
-echo 20 | python root.py > root.code
+echo 10 | python root.py > root.code
 cd ../transaction
-echo 20 | python transaction.py > transaction.code
+echo 10 | python transaction.py > transaction.code
 ../../../target/release/zokrates compile --gadgets -i 'transaction.code'
 ../../../target/release/zokrates setup
 ../../../target/release/zokrates export-verifier
 cd ../withdraw
-echo 20 | python withdraw.py > withdraw.code
+echo 10 | python withdraw.py > withdraw.code
 ../../../target/release/zokrates compile --gadgets -i 'withdraw.code'
 ../../../target/release/zokrates setup
 ../../../target/release/zokrates export-verifier

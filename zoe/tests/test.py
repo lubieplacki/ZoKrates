@@ -28,9 +28,9 @@ w3.eth.getBalance(manager.address)
 manager.functions.getCommitmentsTree().call()
 commitments = available_commitments(manager, secret_key, public_key, rsa_private_key)
 
-in_secret = commitments[1]['secret']
-in_value = commitments[1]['value']
-in_commitment = commitments[1]['commitment']
+in_secret = commitments[1]['s']
+in_value = commitments[1]['v']
+in_commitment = commitments[1]['commit']
 rsa_public_key_change = rsa_public_key
 public_key_change = public_key
 out_value = 5
@@ -40,7 +40,7 @@ available_commitments(manager, secret_key, public_key, rsa_private_key)
 w3.eth.getBalance(w3.eth.accounts[0])
 w3.eth.getBalance(manager.address)
 
-transaction(w3, manager, public_key, secret_key, 1, out_pk, rsa_public_key_out, rsa_public_key, commitments[0]['value'], commitments[0]['commitment'], commitments[0]['secret'])
+transaction(w3, manager, public_key, secret_key, 1, out_pk, rsa_public_key_out, rsa_public_key, commitments[0]['v'], commitments[0]['commit'], commitments[0]['s'])
 available_commitments(manager, secret_key, public_key, rsa_private_key)
 
 w3.eth.getBalance(w3.eth.accounts[0])
@@ -50,13 +50,13 @@ w3.eth.getBalance(manager.address)
 commitsSecondGuy = available_commitments(manager, out_sk, out_pk, rsa_private_key_out)
 w3.eth.getBalance(w3.eth.accounts[1])
 w3.eth.defaultAccount = w3.eth.accounts[1]
-in_secret = commitments[0]['secret']
-in_value = commitsSecondGuy[0]['value']
-in_commitment = commitments[0]['commitment']
+in_secret = commitments[0]['s']
+in_value = commitsSecondGuy[0]['v']
+in_commitment = commitments[0]['commit']
 rsa_public_key_change = rsa_public_key_out
 public_key_change = public_key
 out_value = 3
-withdraw(w3, manager, out_pk, out_sk, out_value, commitsSecondGuy[0]['value'], commitsSecondGuy[0]['commitment'], commitsSecondGuy[0]['secret'], rsa_public_key_out)
+withdraw(w3, manager, out_pk, out_sk, out_value, commitsSecondGuy[0]['v'], commitsSecondGuy[0]['commit'], commitsSecondGuy[0]['s'], rsa_public_key_out)
 
 
 w3.eth.getBalance(w3.eth.accounts[1])

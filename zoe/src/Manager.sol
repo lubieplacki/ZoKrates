@@ -49,9 +49,9 @@ contract Manager {
   event TransactionEvent(string encrypted_msg);
   event Error(string error);
   event RegisterEvent(uint pk, string enc_pk, address from);
-  uint constant depth = 20;
-  uint constant max_leaves = 1048576;
-  uint constant tree_size = 2097152;
+  uint constant depth = 10;
+  uint constant max_leaves = 1024;
+  uint constant tree_size = 2048;
   uint constant weiPerEth = 1000000000000000000;
   struct Mtree {
     uint current;
