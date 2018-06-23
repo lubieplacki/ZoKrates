@@ -368,7 +368,7 @@ fn main() {
                 Ok(file) => file,
                 Err(why) => panic!("couldn't open {}: {}", path.display(), why),
             };
-
+            println!("  Deserializing...");
             let program_ast: FlatProg<FieldPrime> = match deserialize_from(&mut file, Infinite) {
                 Ok(x) => x,
                 Err(why) => {
@@ -376,7 +376,7 @@ fn main() {
                     std::process::exit(1);
                 }
             };
-
+            println!("  Flattening...");
             let main_flattened = program_ast
                 .functions
                 .iter()
@@ -387,6 +387,7 @@ fn main() {
             //println!("{}", main_flattened);
 
             // transform to R1CS
+            println!("  Transforming to R1CS...");
             let (variables, private_inputs_offset, a, b, c) = r1cs_program(&program_ast);
 
             // write variables meta information to file
@@ -408,7 +409,7 @@ fn main() {
             // get paths for proving and verification keys
             let pk_path = sub_matches.value_of("proving-key-path").unwrap();
             let vk_path = sub_matches.value_of("verification-key-path").unwrap();
-
+            println!("  Setup...");
             // run setup phase
             #[cfg(not(feature="nolibsnark"))]{
                 // number of inputs in the zkSNARK sense, i.e., input variables + output variables

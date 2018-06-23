@@ -297,8 +297,11 @@ pub fn r1cs_program<T: Field>(
 
     // position where private part of witness starts
     let private_inputs_offset = variables.len();
-
+    let mut x = 0;
+    let y = main.statements.len();
     for def in &main.statements {
+        println!("    Statement {} out of {}...", x, y);
+        x = x + 1;
         match *def {
             FlatStatement::Return(ref list) => {
                 for (i, val) in list.expressions.iter().enumerate() {
