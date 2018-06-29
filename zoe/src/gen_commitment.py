@@ -1,4 +1,4 @@
-from utils import *
+from src.utils import *
 from subprocess import call
 
 def gen_commitment_bits(public_key, secret, value):

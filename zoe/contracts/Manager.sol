@@ -47,7 +47,6 @@ contract Manager {
   mapping (uint => bool) public commitments;
   mapping (uint => bool) public roots;
   event TransactionEvent(string encrypted_msg);
-  event Error(string error);
   event RegisterEvent(uint pk, string enc_pk, address from);
   uint constant depth = 10;
   uint constant max_leaves = 1024;
@@ -58,6 +57,13 @@ contract Manager {
     uint[tree_size] tree;
   }
   Mtree public MT;
+
+  function Manager(address _dv, address _tv, address _wv) public {
+    dv = DepositVerifier(_dv);
+    tv = TransactionVerifier(_tv);
+    wv = WithdrawVerifier(_wv);
+    MT.current = 0;
+  }
   function update_tree() internal returns (bool res) {
     uint i = MT.current + max_leaves;
     uint zero_hash = 0;
@@ -72,12 +78,6 @@ contract Manager {
     return true;
   }
 
-  function Manager(address _dv, address _tv, address _wv) public {
-    dv = DepositVerifier(_dv);
-    tv = TransactionVerifier(_tv);
-    wv = WithdrawVerifier(_wv);
-    MT.current = 0;
-  }
   function register(uint pk, string enc_pk) public returns (bool res) {
     emit RegisterEvent(pk, enc_pk, msg.sender);
     return true;
@@ -239,7 +239,7 @@ contract Manager {
     uint[2] c_p,
     uint[2] h,
     uint[2] k,
-    uint[4] public_input, //invalidator, root, value_out, commitment_change
+    uint[4] public_input, //invalidator, root, commitment_change, value_out
     string encrypted_msg_change
   ) public returns (bool res) {
     require(withdraw_internal(a, a_p, b, b_p, c, c_p, h, k, public_input), "Withdraw is incorrect!");

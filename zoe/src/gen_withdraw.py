@@ -1,4 +1,4 @@
-from utils import *
+from src.utils import *
 from subprocess import call
 
 def gen_withdraw_proof(input_invalidator, root, change_commitment,

@@ -16,15 +16,13 @@ contract_address = 0 #0x000
 weiPerUnit = 100000000000000000
 
 def init_manager(w3, manager_address):
-    #w3 = Web3(EthereumTesterProvider())
     compiled = compile_files(["./contracts/Manager.sol"])
     contract_interface = compiled['./contracts/Manager.sol:Manager']
 
     w3.eth.defaultAccount = w3.eth.accounts[0]
     manager = w3.eth.contract(
         abi=contract_interface['abi'],
-        address=contract_address
-        #address here
+        address=manager_address
     )
     return manager
 
@@ -224,23 +222,27 @@ def withdraw(manager, public_key, secret_key, rsa_public_key_change, out_value, 
 
 def available_commitments(manager, secret_key, public_key, rsa_private_key):
     results = manager.events.TransactionEvent.createFilter(fromBlock= 0, toBlock= 'latest').get_all_entries()
-commitments = []
-for result in results:
-    encrypted_msg = result['args']['encrypted_msg']
-    try:
-        decrypted = decrypt(encrypted_msg, rsa_private_key)
-        decrypted_object = ast.literal_eval(decrypted)
-        if (decrypted_object['pk'] == public_key):
-            invalidator = gen_invalidator(secret_key, decrypted_object['s'])
-            if (manager.functions.check_invalidator(invalidator).call() == False):
-                commitments.append(decrypted_object)
-    except Exception as e:
-        pass
+    commitments = []
+    for result in results:
+        encrypted_msg = result['args']['encrypted_msg']
+        try:
+            decrypted = decrypt(encrypted_msg, rsa_private_key)
+            decrypted_object = ast.literal_eval(decrypted)
+            if (decrypted_object['pk'] == public_key):
+                invalidator = gen_invalidator(secret_key, decrypted_object['s'])
+                if (manager.functions.check_invalidator(invalidator).call() == False):
+                    commitments.append(decrypted_object)
+        except Exception as e:
+            pass
     return commitments
 
 def available_addresses(manager):
     results = manager.events.RegisterEvent.createFilter(fromBlock= 0, toBlock= 'latest').get_all_entries()
-    return results
+    res = []
+    for result in results:
+        r = result['args']
+        res.append(r)
+    return res
 #####
 # available_commitments
 ## *scan* invalidators

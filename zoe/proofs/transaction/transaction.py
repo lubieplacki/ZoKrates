@@ -41,7 +41,7 @@ print "def main(inputInvalidator, root, outCommitment, changeCommitment, \
     privateBits("changeValue", 32), privateBits("changeId", 32), privateBits("changePublicKey", 256),
     privateBits("outValue", 32), privateBits("outId", 32), privateBits("outPublicKey", 256)
     )
-#TODO everything has to be private
+
 print "  // Check input coin is correct"
 print "  1 == commitmentCheck(inputCommitment, inputValue, inputId, inputPublicKey, {}, {}, {})".format(bits("inputValue", 32), bits("inputId", 32), bits("inputPublicKey", 256))
 print "  1 == publicKeyCheck(inputPublicKey, inputPrivateKey, {})".format(bits("inputPrivateKey", 256))
@@ -53,7 +53,6 @@ print "  inputValue == outValue + changeValue"
 print "  1 == naturalCheck(changeValue)"
 print "  1 == naturalCheck(outValue)"
 print "  "
-#TODO change_value has to be private
 print "  // Check if change commitment is correct"
 print "  1 == commitmentCheck(changeCommitment, changeValue, changeId, changePublicKey, {}, {}, {})".format(bits("changeValue", 32), bits("changeId", 32), bits("changePublicKey", 256))
 print "  // Check if out commitment is correct"

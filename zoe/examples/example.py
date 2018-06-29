@@ -1,26 +1,36 @@
 #source ~/virtualenvs/venv/bin/activate
+#run from zoe folder
 from src.deploy_contracts import *
 w3 = Web3(EthereumTesterProvider())
 manager = deploy_manager(w3)
 
 from src.gen_public_key import *
-sender_seed = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+w3.eth.defaultAccount = w3.eth.accounts[1]
 receiver_seed = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-sender_secret_key, sender_public_key,
-    sender_rsa_private_key, sender_rsa_public_key = gen_keys(sender_seed)
-
-receiver_secret_key, receiver_public_key,
-    receiver_rsa_private_key, receiver_rsa_public_key = gen_keys(receiver_seed)
+receiver_secret_key, receiver_public_key, receiver_rsa_private_key, receiver_rsa_public_key = gen_keys(receiver_seed)
+receiver_rsa_public_key =  receiver_rsa_public_key.exportKey().decode('utf-8')
+receiver_rsa_private_key = receiver_rsa_private_key.exportKey().decode('utf-8')
 
 from zoe import *
+register(manager, receiver_public_key, receiver_rsa_public_key)
+available_addresses(manager)
+available_commitments(manager, receiver_secret_key,
+  receiver_public_key, receiver_rsa_private_key)
+
+w3.eth.defaultAccount = w3.eth.accounts[0]
+sender_seed = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+sender_secret_key, sender_public_key, sender_rsa_private_key, sender_rsa_public_key = gen_keys(sender_seed)
+
+
+w3.eth.getBalance(w3.eth.accounts[0])
+w3.eth.getBalance(w3.eth.accounts[1])
+w3.eth.getBalance(manager.address)
+
+deposit(manager, 40, sender_public_key, sender_rsa_public_key)
 w3.eth.getBalance(w3.eth.accounts[0])
 w3.eth.getBalance(manager.address)
 
-deposit(w3, manager, 4, sender_public_key, sender_rsa_public_key)
-w3.eth.getBalance(w3.eth.accounts[0])
-w3.eth.getBalance(manager.address)
-
-deposit(w3, manager, 105, sender_public_key, sender_rsa_public_key)
+deposit(manager, 105, sender_public_key, sender_rsa_public_key)
 w3.eth.getBalance(w3.eth.accounts[0])
 w3.eth.getBalance(manager.address)
 
@@ -47,9 +57,35 @@ result = transaction(
     input_commitment_id
 )
 
-available_commitments(manager, sender_secret_key, sender_public_key, sender_rsa_private_key)
+commitments = available_commitments(manager, sender_secret_key, sender_public_key, sender_rsa_private_key)
+commitments
 
 w3.eth.getBalance(w3.eth.accounts[0])
+w3.eth.getBalance(w3.eth.accounts[1])
+w3.eth.getBalance(manager.address)
+
+w3.eth.defaultAccount = w3.eth.accounts[1]
+commitments_receiver = available_commitments(manager, receiver_secret_key, receiver_public_key, receiver_rsa_private_key)
+commitments_receiver
+
+out_value = 3
+withdraw(
+    manager,
+    receiver_public_key,
+    receiver_secret_key,
+    receiver_rsa_public_key,
+    out_value,
+    commitments_receiver[0]['v'],
+    commitments_receiver[0]['commit'],
+    commitments_receiver[0]['s'],
+    commitments_receiver[0]['id']
+)
+
+commitments_receiver = available_commitments(manager, receiver_secret_key, receiver_public_key, receiver_rsa_private_key)
+commitments_receiver
+
+w3.eth.getBalance(w3.eth.accounts[0])
+w3.eth.getBalance(w3.eth.accounts[1])
 w3.eth.getBalance(manager.address)
 
 transaction(
