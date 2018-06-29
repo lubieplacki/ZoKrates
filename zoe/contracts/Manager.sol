@@ -52,7 +52,7 @@ contract Manager {
   uint constant depth = 10;
   uint constant max_leaves = 1024;
   uint constant tree_size = 2048;
-  uint constant weiPerEth = 1000000000000000000;
+  uint constant weiPerUnit = 100000000000000000;
   struct Mtree {
     uint current;
     uint[tree_size] tree;
@@ -140,7 +140,7 @@ contract Manager {
     uint value
   ) internal returns (bool res) {
     require(!commitments[commitment], "Commitment already used!");
-    require(dv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [commitment, value / weiPerEth, 1]), "Deposit proof is wrong!");
+    require(dv.verifyTx(a, a_p, b, b_p, c, c_p, h, k, [commitment, value / weiPerUnit, 1]), "Deposit proof is wrong!");
     require(add_commitment(commitment), "Couldn't add the commitment!");
     return true;
   }
@@ -224,7 +224,7 @@ contract Manager {
     require(!commitments[public_input[2]], "Change commitment already used!");
 
     require(wv.verifyTx(a, a_p, b, b_p, c, c_p, h, k,
-      [public_input[0], public_input[1], public_input[2], public_input[3] / weiPerEth, 1]
+      [public_input[0], public_input[1], public_input[2], public_input[3] / weiPerUnit, 1]
       ), "Withdraw proof is wrong!");
     require(add_commitment(public_input[2]), "Couldn't add change commitment!");
     return true;

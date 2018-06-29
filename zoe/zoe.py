@@ -1,9 +1,8 @@
 import random
-from gen_commitment import *
-from gen_invalidator import *
-from gen_transaction import *
-from gen_withdraw import *
-from gen_root import *
+from src.gen_commitment import *
+from src.gen_invalidator import *
+from src.gen_transaction import *
+from src.gen_withdraw import *
 from web3.contract import ConciseContract
 from web3 import Web3, HTTPProvider, EthereumTesterProvider
 import json
@@ -12,38 +11,32 @@ import ast
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
-maxInt = 2**32
+maxSecret = 2**32
 contract_address = 0 #0x000
-weiPerEth = 1000000000000000000
+weiPerUnit = 100000000000000000
 
 def init_manager(w3, manager_address):
     #w3 = Web3(EthereumTesterProvider())
-    compiled = compile_files(["./src/Manager.sol"])
-    contract_interface = compiled['./src/Manager.sol:Manager']
+    compiled = compile_files(["./contracts/Manager.sol"])
+    contract_interface = compiled['./contracts/Manager.sol:Manager']
 
     w3.eth.defaultAccount = w3.eth.accounts[0]
     manager = w3.eth.contract(
         abi=contract_interface['abi'],
-        address=manager_address
+        address=contract_address
         #address here
     )
     return manager
 
-
-tree_depth = 7
 def random_secret():
-    return random.randint(0, maxInt)
+    return random.randint(0, maxSecret)
+
 ####
 # register
-## generate public_key
-## *send* public_key to contract
-## *get* verification keys
-## save keys
+## *send* public_keys to contract
 def register(manager, public_key, rsa_public_key):
     return manager.functions.register(public_key, rsa_public_key).transact()
-    ## *send* public_key to contract
-    ## *get* verification keys
-    ## save keys
+
 def load_key(path):
     res = ""
     with open(path,"r") as key_file:
@@ -81,7 +74,7 @@ def encrypt_msg(commitment, id_in_tree, public_key, secret, value, rsa_key):
 ## *encode* public_key,value,secret
 ## *send* commitment, value, commitment_proof, encrypted message to contract
 ## contract verifies proof, adds commitment to the tree and saves value
-def deposit(w3, manager, value, public_key, rsa_public_key):
+def deposit(manager, value, public_key, rsa_public_key):
     secret = random_secret()
     print("Creating commitment...")
     commitment = gen_commitment(public_key, secret, value)
@@ -106,19 +99,14 @@ def deposit(w3, manager, value, public_key, rsa_public_key):
         commitment,
         str(encrypted_msg),
     ).transact({
-        "value": value * weiPerEth,
-        "from": w3.eth.accounts[0],
+        "value": value * weiPerUnit,
+        #"from": w3.eth.accounts[0],
         "gas":3 * 10**6,
         "gasPrice":10**10,
     })
     print("Finished.")
     return result
-    ## *encode* public_key,value,secret
-    ## *send* commitment, value, commitment_proof, encrypted message to contract
-    ## print result
 
-def get_commitments(manager):
-    return manager.functions.getCommitments().call()
 #####
 # transaction
 ## load pk, sk
@@ -137,7 +125,7 @@ def get_commitments(manager):
 ## *send* transaction_proof, input_invalidator, root, change_commitment, out_commitment
 ## contract checks root, invalidator, proof, adds commitments
 
-def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_public_key_out, rsa_public_key_change, in_value, in_commitment, in_secret, in_id_in_tree):
+def transaction(manager, public_key, secret_key, out_value, out_pk, rsa_public_key_out, rsa_public_key_change, in_value, in_commitment, in_secret, in_id_in_tree):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     (root, left_path, right_path) = manager.functions.get_merkle_proof(in_id_in_tree).call()
@@ -196,7 +184,7 @@ def transaction(w3, manager, public_key, secret_key, out_value, out_pk, rsa_publ
 ## gen withdraw_proof
 ## *send* withdraw_proof, input_invalidator, root, change_commitment, out_value
 ## contract checks root, invalidator, proof, adds commitment, send out_value to sender
-def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commitment, in_secret, rsa_public_key_change, in_id_in_tree):
+def withdraw(manager, public_key, secret_key, rsa_public_key_change, out_value, in_value, in_commitment, in_secret, in_id_in_tree):
     in_invalidator = gen_invalidator(secret_key, in_secret)
 
     (root, left_path, right_path) = manager.functions.get_merkle_proof(in_id_in_tree).call()
@@ -228,7 +216,7 @@ def withdraw(w3, manager, public_key, secret_key, out_value, in_value, in_commit
         [in_invalidator,
         root,
         change_commitment,
-        out_value * weiPerEth],
+        out_value * weiPerUnit],
         str(encrypted_msg_change),
     ).transact()
     print("Finished.")
