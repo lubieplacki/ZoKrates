@@ -19,7 +19,6 @@ def init_manager(w3, manager_address):
     compiled = compile_files(["./contracts/Manager.sol"])
     contract_interface = compiled['./contracts/Manager.sol:Manager']
 
-    w3.eth.defaultAccount = w3.eth.accounts[0]
     manager = w3.eth.contract(
         abi=contract_interface['abi'],
         address=manager_address
