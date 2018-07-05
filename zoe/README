@@ -1,0 +1,59 @@
+--Quickly written README, if anyone's interested I can provide more robust description. But example.log can be helpful
+
+This application was developed as an example of zk-snarks usage in my Master's thesis -
+"Privacy in applications based on Ethereum blockchain."
+
+It enables ability to transfer ether anonymously. It's based on ZCash protocol.
+It uses zk-snarks to prove ownership etc. - like in ZCash and RSA encryption
+to communicate through contract.
+
+Check examples/example.log to see what's possible!
+
+It's still a prototype.
+Though it's quite big, hopefully it can serve as a ZoKrates's usage example.
+
+Structure of the project:
+- zoe/contracts - smart contracts: verifiers and manager, manager checks proofs,
+save commitments, deposits and withdraws ether.
+- zoe/examples - examples of app's usage,
+- zoe/proofs - proofs in ZoKrates language, verifying keys, you need to download
+providing keys and variables.inf from dropbox as they are too big for git,
+https://www.dropbox.com/sh/pn11fmwt5k82vh3/AAAbRuIGyIqldEKFbNszbF_ga?dl=0
+- zoe/src - functions used for easier use of ZoKrates
+- zoe.py - functions used for interaction with smart contracts, most important ones:
+---- register to provide public keys for sender anonymously if you don't have other private channel
+---- deposit to deposit ether into contract, amount and sender is publicly seen
+---- transfer to transfer ether inside contract, sender is seen, but receiver is anonymous and amount is hidden
+---- withdraw to withdraw ether from contract, receiver and amount is seen, but cannot be connected to sender
+---- available_commitments to see commitments that you can use
+
+
+Problems with this application that stop it from the public usage:
+1. Pretty small Merkle tree - 1024 commitments.
+It can be easily changed though.
+Just change constants in contracts/Manager.sol and compile-and-setup-all.
+Then setup everything and use new keys, verifiers and contracts.
+I've set such a small tree, because working with docker it still took me
+over 2h to compile and 8GB RAM to be able to generate proof inside docker container.
+So it can be scaled with better machine than mine.
+
+2. After tree is full, there's no ability to get ether back.
+Need to add withdraw-without-change instruction.
+
+3. Being able to spend only one commitment at once to transfer or withdraw.
+Need to add join-commitments instruction.
+
+4. available_commitments should be optimized to remember what was already checked
+
+5. Trusted setup - of course :D
+
+Advantages of this app over babyZoe:
+- native use of zk-snarks using ZoKrates - I guess maximus is doing it already :) shout out to https://github.com/barryWhiteHat/miximus
+- it allows any amount of ether to deposit or transfer (restricted to multiplies of 0.1 eth, but can be changed easily)
+- it allows to transfer ether inside contract
+
+I can provide longer description if anyone needs one.
+Unfortunately my thesis is in Polish, so it's no use here. :)
+
+Cheers,
+Mateusz Kopec (@lubieplacki)
