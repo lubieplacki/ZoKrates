@@ -11,7 +11,7 @@ def gen_keys(secret_seed):
 
     secret_key_bits = string_to_bits(secret_seed, 32)
 
-    print(secret_key)
+    print(secret_seed)
 
     secret_int = bits_to_int(secret_key_bits)
     print("Your secret key:")
